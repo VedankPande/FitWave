@@ -33,8 +33,8 @@ class _ImageSelectorState extends State<ImageSelector> {
 
   loadModel() async {
     await Tflite.loadModel(
-        model:
-            'assets/lite-model_movenet_singlepose_lightning_tflite_int8_4.tflite',
+        model: 'assets/lite-model_movenet_singlepose_lightning_tflite_int8_4.tflite',
+        labels: 'assets/labels.txt',
         useGpuDelegate: false);
     print('model successfully loaded');
   }
@@ -52,13 +52,14 @@ class _ImageSelectorState extends State<ImageSelector> {
 
     print("image path:" + image.path);
     var model_output = await Tflite.runModelOnImage(
-      path: image.path,
+      path: io.File(image.path).path,
     );
     print("my_data");
+    print(model_output);
     setState(() {
       imageFile = image;
     });
-  }
+    }
 
   @override
   Widget build(BuildContext context) {
