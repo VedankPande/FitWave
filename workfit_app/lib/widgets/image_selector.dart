@@ -4,6 +4,8 @@ import 'dart:io' as io;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
+import 'package:tflite_flutter/tflite_flutter.dart';
+import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 
 class ImageSelector extends StatefulWidget {
   const ImageSelector({Key? key}) : super(key: key);
@@ -73,3 +75,46 @@ class _ImageSelectorState extends State<ImageSelector> {
     );
   }
 }
+
+
+class Movenet{
+  Interpreter? _interpreter;
+
+  final _interpreterOptions = InterpreterOptions()..useNnApiForAndroid =true;
+  
+  static const String modelName = 'lite-model_movenet_singlepose_lightning_tflite_int8_4.tflite';
+
+  late List<int> _outputShape;
+  late TfLiteType _outputType;
+  late TensorBuffer _outputBuffer;
+
+  Movenet({Interpreter? interpreter}){
+    loadModel();
+  }
+  
+  // load the specified model and get input/output tensor information
+  void loadModel({Interpreter? interpreter}) async {
+    _interpreter =  interpreter ?? await Interpreter.fromAsset(modelName, options: _interpreterOptions);
+
+    if (_interpreter != null){
+      var outputTensor = _interpreter!.getOutputTensor(0);
+      _outputShape = outputTensor.shape;
+      _outputType = outputTensor.type;
+    }
+    
+  }
+
+  //TODO: get output tensor shape and type from _intepreter - use that to create output buffer and run inference
+  void predict(Image image){
+    _outputShape = _interpreter!.getOutputTensor(0).shape;
+    _outputType = _interpreter!.getOutputTensor(0).type;
+    _outputBuffer = TensorBuffer.createFixedSize(_outputShape, _outputType);
+
+  }
+
+  // resize (with padding) and get tensor image 
+  TensorImage processImage(TensorImage image){
+    return image;
+  }
+}
+

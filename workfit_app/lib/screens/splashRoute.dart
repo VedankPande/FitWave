@@ -4,6 +4,8 @@ import 'package:page_transition/page_transition.dart';
 import 'package:workfit_app/screens/homeRoute.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({ Key? key }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return _SplashScreenState();
@@ -18,23 +20,23 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   startTimer() async {
-    Timer(Duration(seconds: 3), nextScreen);
+    Timer(const Duration(seconds: 3), nextScreen);
   }
 
   nextScreen() async {
     Navigator.pushAndRemoveUntil(
         context,
         PageTransition(
-          duration: Duration(microseconds: 500),
+          duration: const Duration(microseconds: 500),
           type: PageTransitionType.fade,
-          child: HomeScreen(),
+          child: const HomeScreen(),
         ),
         (route) => false);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: Text('Pande chutiya!'),
       ),
