@@ -16,7 +16,7 @@ class _WorkoutSetsScreenState extends State<WorkoutSetsScreen> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+            children: const [
               Text('Workout Sets'),
               TextButton(
                 onPressed: null,
@@ -24,9 +24,9 @@ class _WorkoutSetsScreenState extends State<WorkoutSetsScreen> {
               )
             ],
           ),
-          WorkoutCard(),
-          WorkoutCard(),
-          WorkoutCard(),
+          const WorkoutCard(),
+          const WorkoutCard(),
+          const WorkoutCard(),
         ],
       ),
     );

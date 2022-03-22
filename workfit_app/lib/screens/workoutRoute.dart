@@ -49,7 +49,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                 backgroundColor: MaterialStateProperty.all(Colors.white),
               ),
               onPressed: null,
-              child: Text('Squats'),
+              child: const Text('Squats'),
             ),
           ),
           Positioned(
@@ -68,17 +68,17 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                       child: Column(
                         children: [
                           ElevatedButton(
-                            child: Text('X'),
+                            child: const Text('X'),
                             onPressed: toggleVisibility,
                           ),
-                          Text('Daily workout set-3'),
-                          Text('Exercises'),
-                          Text('Squats'),
-                          Text('Push-ups'),
+                          const Text('Daily workout set-3'),
+                          const Text('Exercises'),
+                          const Text('Squats'),
+                          const Text('Push-ups'),
                         ],
                       ),
                     ),
-                    ElevatedButton(
+                    const ElevatedButton(
                       child: Text('End set'),
                       onPressed: null,
                     ),

@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Hi! Kaushik'),
+                  const Text('Hi! Kaushik'),
                   Image.network(
                     'https://static.wikia.nocookie.net/rockstargamesgtavicecity/images/6/6a/Artwork-GTAVC-TommyVercetti.jpg/revision/latest/scale-to-width-down/180?cb=20160522093004',
                   ),
@@ -34,22 +34,22 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               child: Column(
                 children: [
-                  WorkoutCard(),
+                  const WorkoutCard(),
                   TextButton(
                     onPressed: () {
                       Navigator.pushAndRemoveUntil(
                         context,
                         PageTransition(
-                          duration: Duration(microseconds: 500),
+                          duration: const Duration(microseconds: 500),
                           type: PageTransitionType.fade,
-                          child: Home(
+                          child: const Home(
                             currentIndex: 2,
                           ),
                         ),
                         (route) => false,
                       );
                     },
-                    child: Text('View schedule'),
+                    child: const Text('View schedule'),
                   ),
                 ],
               ),
@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                    children: const [
                       Text('Body Statistics'),
                       Text('Edit'),
                     ],
@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               child: Column(
-                children: [
+                children: const [
                   Text('Kaushik, Create your personalized workout set'),
                   ElevatedButton(
                     onPressed: null,

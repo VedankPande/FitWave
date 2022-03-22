@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
         PageTransition(
           duration: const Duration(microseconds: 500),
           type: PageTransitionType.fade,
-          child: Home(),
+          child: const Home(),
         ),
         (route) => false);
   }
