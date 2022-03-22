@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:page_transition/page_transition.dart';
-import 'package:workfit_app/screens/homeRoute.dart';
+import 'package:workfit_app/screens/home.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
         PageTransition(
           duration: Duration(microseconds: 500),
           type: PageTransitionType.fade,
-          child: HomeScreen(),
+          child: Home(),
         ),
         (route) => false);
   }
