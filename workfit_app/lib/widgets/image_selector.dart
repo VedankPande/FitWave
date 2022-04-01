@@ -1,5 +1,7 @@
 import 'dart:developer';
+import 'dart:html';
 import 'dart:io' as io;
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -83,10 +85,15 @@ class Movenet{
   final _interpreterOptions = InterpreterOptions()..useNnApiForAndroid =true;
   
   static const String modelName = 'lite-model_movenet_singlepose_lightning_tflite_int8_4.tflite';
-
+  
+  late List<int> _inputShape;
+  late TfLiteType _inputType;
   late List<int> _outputShape;
   late TfLiteType _outputType;
   late TensorBuffer _outputBuffer;
+  late TensorImage _inputImage;
+
+  
 
   Movenet({Interpreter? interpreter}){
     loadModel();
@@ -98,6 +105,9 @@ class Movenet{
 
     if (_interpreter != null){
       var outputTensor = _interpreter!.getOutputTensor(0);
+      var inputTensor = _interpreter!.getInputTensor(0);
+      _inputShape = inputTensor.shape;
+      _inputType = inputTensor.type;
       _outputShape = outputTensor.shape;
       _outputType = outputTensor.type;
     }
@@ -109,12 +119,26 @@ class Movenet{
     _outputShape = _interpreter!.getOutputTensor(0).shape;
     _outputType = _interpreter!.getOutputTensor(0).type;
     _outputBuffer = TensorBuffer.createFixedSize(_outputShape, _outputType);
+    try{
+      _interpreter?.run(_inputImage.buffer, _outputBuffer);
+    
+    }
+    catch (err){
+      print(err);
+    }
 
   }
 
   // resize (with padding) and get tensor image 
   TensorImage processImage(TensorImage image){
-    return image;
+    int cropSize = max(_inputImage.height,_inputImage.width);
+    return ImageProcessorBuilder()
+    .add(ResizeWithCropOrPadOp(cropSize,cropSize))
+    .add(ResizeOp(_inputShape[1],_inputShape[2],ResizeMethod.NEAREST_NEIGHBOUR))
+    .build()
+    .process(_inputImage);
   }
+
+  
 }
 
