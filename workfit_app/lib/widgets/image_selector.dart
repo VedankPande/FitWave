@@ -17,6 +17,8 @@ class ImageSelector extends StatefulWidget {
 }
 
 class _ImageSelectorState extends State<ImageSelector> {
+
+  late Movenet _movenet;
   bool loading = false;
   XFile? imageFile;
   List output = [];
@@ -24,6 +26,7 @@ class _ImageSelectorState extends State<ImageSelector> {
   @override
   void initState() {
     super.initState();
+    _movenet = Movenet();
     loadModel().then((value) {
       setState(() {});
     });
@@ -58,6 +61,7 @@ class _ImageSelectorState extends State<ImageSelector> {
     var model_output = await Tflite.runModelOnImage(
       path: io.File(image.path).path,
     );
+    var movenet_output = _movenet.predict(Image.file(io.File(image.path)));
     print("my_data");
     print(model_output);
     setState(() {
@@ -80,9 +84,10 @@ class _ImageSelectorState extends State<ImageSelector> {
 
 
 class Movenet{
+
   Interpreter? _interpreter;
 
-  final _interpreterOptions = InterpreterOptions()..useNnApiForAndroid =true;
+  final InterpreterOptions _interpreterOptions = InterpreterOptions()..useNnApiForAndroid =true;
   
   static const String modelName = 'lite-model_movenet_singlepose_lightning_tflite_int8_4.tflite';
   
@@ -92,8 +97,6 @@ class Movenet{
   late TfLiteType _outputType;
   late TensorBuffer _outputBuffer;
   late TensorImage _inputImage;
-
-  
 
   Movenet({Interpreter? interpreter}){
     loadModel();
@@ -116,12 +119,14 @@ class Movenet{
 
   //TODO: get output tensor shape and type from _intepreter - use that to create output buffer and run inference
   void predict(Image image){
+    _inputImage = TensorImage(_inputType);
+    _inputImage = processImage();
     _outputShape = _interpreter!.getOutputTensor(0).shape;
     _outputType = _interpreter!.getOutputTensor(0).type;
     _outputBuffer = TensorBuffer.createFixedSize(_outputShape, _outputType);
     try{
-      _interpreter?.run(_inputImage.buffer, _outputBuffer);
-    
+      _interpreter?.run(_inputImage.buffer, _outputBuffer.getBuffer());
+      print(_outputBuffer);
     }
     catch (err){
       print(err);
@@ -130,11 +135,12 @@ class Movenet{
   }
 
   // resize (with padding) and get tensor image 
-  TensorImage processImage(TensorImage image){
+  TensorImage processImage(){
     int cropSize = max(_inputImage.height,_inputImage.width);
     return ImageProcessorBuilder()
     .add(ResizeWithCropOrPadOp(cropSize,cropSize))
     .add(ResizeOp(_inputShape[1],_inputShape[2],ResizeMethod.NEAREST_NEIGHBOUR))
+    .add(NormalizeOp(127.5, 127.5))
     .build()
     .process(_inputImage);
   }
