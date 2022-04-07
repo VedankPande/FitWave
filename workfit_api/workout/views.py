@@ -1,34 +1,44 @@
+from json import loads,dumps
 from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.views import APIView
 from .models import Workout,ExerciseData,ExerciseObject
+from .serializers import ExerciseDataSerializer, WorkoutSerializer
 # Create your views here.
 
-#TODO: refactor with serializers
+#TODO:filter for owner
 #workoutview returns a workout along with its exercise details
 class WorkoutView(APIView):
     
     def get(self,request):
-        response = {}
+        response = []
         for workout in Workout.objects.all():
-            response[workout] = []
-            for exercise in workout.exercise_instances:
-                response[workout].append({
-                    "name":exercise.exercise_data.name,
-                    "sets":exercise.sets,
-                    "reps":exercise.reps,
-                })
+            data = WorkoutSerializer(instance=workout).data
+            data = loads(dumps(data))
+            response.append(data)
         return JsonResponse({'status':200,"data":response})
     
+    #TODO: complete with serializer
     def post(self,request):
         
-        try:
-            print(request.data)
-            return JsonResponse({"status":200,"data":request.data})
-        except Exception as e:
-            print(e)
-            return JsonResponse({"status":400,"data":e})
+        data = request.data
+        Workout.objects.create(name=data['name'],owner=data["owner"])
+        return JsonResponse({"status":200,"data":WorkoutSerializer(data,many=False)})
 
+
+class ExerciseDataView(APIView):
+
+    def get(self,request):
+        exercises = ExerciseData.objects.all()
+        data = ExerciseDataSerializer(instance=exercises,many=True).data
+        data = loads(dumps(data))
+        return JsonResponse({"status":200,"data":data})
+
+
+class ExerciseObjectView(APIView):
+
+    def post(self,request):
+        pass
         
 
 

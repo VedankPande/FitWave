@@ -2,9 +2,7 @@ from multiprocessing.dummy import Array
 from django.contrib.postgres.fields import ArrayField,JSONField,HStoreField
 from django.db import models
 
-
-# Create your models here.
-
+#TODO: Change owner to ownerid(int) once finalized
 class Workout(models.Model):
     owner = models.CharField(max_length=20)
     name = models.CharField(max_length=50)
