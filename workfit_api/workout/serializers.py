@@ -14,13 +14,24 @@ class ExerciseObjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ExerciseObject
-        fields = ('sets','reps','exercise_data')
+        fields = ('sets','reps','exercise_data','workout')
+    
+    #TODO: finish create function
+    def create(self,validated_data):
+        return validated_data
 
 
 class WorkoutSerializer(serializers.ModelSerializer):
     
     workout_exercises =ExerciseObjectSerializer(many=True,read_only=True)
+
     class Meta:
         model = Workout
         #depth = 1
-        fields = ('owner','name','workout_exercises')
+        fields = ('id','owner','name','workout_exercises')
+
+    def create(self,validated_data):
+        try:
+            return Workout.objects.create(**validated_data)
+        except Exception as exc:
+            return exc
