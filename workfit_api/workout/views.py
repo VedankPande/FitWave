@@ -1,9 +1,7 @@
 from json import loads,dumps
 from django.http import JsonResponse
-from django.shortcuts import render
-from regex import W
 from rest_framework.views import APIView
-from .models import Workout,ExerciseData,ExerciseObject
+from .models import Workout,ExerciseData
 from .serializers import ExerciseDataSerializer, WorkoutSerializer, ExerciseObjectSerializer
 
 #TODO:filter for owner
@@ -28,6 +26,11 @@ class WorkoutView(APIView):
             return JsonResponse({"status":200,"data": s_data.validated_data})
         else:
             return JsonResponse({"status":500,"data":s_data.errors})
+    
+    #requires workout_id
+    def delete(self,request):
+        print(request.data)
+        return JsonResponse({})
 
 
 class ExerciseDataView(APIView):
@@ -39,12 +42,24 @@ class ExerciseDataView(APIView):
         return JsonResponse({"status":200,"data":data})
 
 
+#post implementation very messy: fix nested serializer issue with default validator
 class ExerciseObjectView(APIView):
 
     def post(self,request):
         data = request.data.copy() # required: sets,reps,workout_id,exercise_id
-        data['workout'] = Workout.objects.filter(id=data['workout_id']).first()
-        data['exercise_data'] = ExerciseData.objects.filter(id=data['exercise_id']).first()
-        print(data)
-        response = ExerciseObjectSerializer(instance=data).data
-        return JsonResponse({'data':response})
+        try:
+            data['exercise_data'] = ExerciseData.objects.filter(id=data['exercise_id']).first()
+            data['workout'] = Workout.objects.filter(id=data['workout_id']).first()
+        except Exception as exc:
+            return JsonResponse({'status':500, 'data':repr(exc)})
+        eos = ExerciseObjectSerializer()
+        if eos.validate(data):
+            exercise_object = eos.custom_validated_data
+            return JsonResponse({'status': 200, 'data': ExerciseObjectSerializer(instance=exercise_object).data})
+        else:
+            return JsonResponse({'status': 500, 'data':{}})
+    
+    #requires exercise_object_id
+    def delete(self,request):
+        print(request.data)
+        return JsonResponse({})

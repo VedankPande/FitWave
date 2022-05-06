@@ -1,3 +1,4 @@
+from django.http import QueryDict
 from rest_framework import serializers
 from .models import ExerciseData,ExerciseObject,Workout
 
@@ -10,20 +11,32 @@ class ExerciseDataSerializer(serializers.ModelSerializer):
 
 class ExerciseObjectSerializer(serializers.ModelSerializer):
 
-    exercise_data = ExerciseDataSerializer(read_only=True)
-
+    custom_validated_data = {}
+    exercise_data = ExerciseDataSerializer()
     class Meta:
         model = ExerciseObject
-        fields = ('sets','reps','exercise_data','workout')
+        fields = ('id','sets','reps','exercise_data','workout')
     
+    def validate(self,data):
+        request_fields = data.keys()
+        for field in self.Meta.fields:
+            if field == "id":
+                continue
+            if field in request_fields:
+                self.custom_validated_data[field] = data[field]
+            else:
+                print(f"{field} is required")
+                return False
+        return True
+
     #TODO: finish create function
     def create(self,validated_data):
-        return validated_data
+        return ExerciseObject.objects.create(**validated_data)
 
 
 class WorkoutSerializer(serializers.ModelSerializer):
     
-    workout_exercises =ExerciseObjectSerializer(many=True,read_only=True)
+    workout_exercises =ExerciseObjectSerializer(many=True)
 
     class Meta:
         model = Workout
