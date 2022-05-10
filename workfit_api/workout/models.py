@@ -1,4 +1,3 @@
-from multiprocessing.dummy import Array
 from django.contrib.postgres.fields import ArrayField,JSONField,HStoreField
 from django.db import models
 
