@@ -1,6 +1,7 @@
-from datetime import datetime
+from django.utils.timezone import now
 from email.policy import default
 from time import process_time_ns
+import django
 from django.db import models
 
 #TODO: Decide fields to use and finish the model
@@ -33,5 +34,5 @@ class FoodData(models.Model):
 
 class UserDailyIntake(models.Model):
    user = models.CharField(max_length=255)
-   date = models.DateField(default=datetime.now().date())
+   date = models.DateTimeField(default=now)
    food_data = models.ForeignKey(FoodData,on_delete=models.CASCADE)
