@@ -29,7 +29,6 @@ class ExerciseObjectSerializer(serializers.ModelSerializer):
                 return False
         return True
 
-    #TODO: finish create function
     def create(self,validated_data):
         return ExerciseObject.objects.create(**validated_data)
 

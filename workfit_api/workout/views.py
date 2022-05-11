@@ -11,12 +11,12 @@ class WorkoutView(APIView):
     def get(self,request):
         try:
             data = request.data #use owner to filter objects
-            query = Workout.objects.filter(owner = data.owner)
+            query = Workout.objects.filter(owner = data["owner"])
             data = WorkoutSerializer(instance=query,many=True).data
             data = loads(dumps(data))
             return JsonResponse({'status':200,"data":data})
         except Exception as e:
-            return JsonResponse({'status':500,'data':e})
+            return JsonResponse({'status':500,'data':repr(e)})
     
     def post(self,request):
         
@@ -40,11 +40,13 @@ class WorkoutView(APIView):
 class ExerciseDataView(APIView):
 
     def get(self,request):
-        exercises = ExerciseData.objects.all()
-        data = ExerciseDataSerializer(instance=exercises,many=True).data
-        data = loads(dumps(data))
-        return JsonResponse({"status":200,"data":data})
-
+        try:
+            exercises = ExerciseData.objects.all()
+            data = ExerciseDataSerializer(instance=exercises,many=True).data
+            data = loads(dumps(data))
+            return JsonResponse({"status":200,"data":data})
+        except Exception as e:
+            return JsonResponse({'status':500,'data':repr(e)})
 
 #post implementation very messy: fix nested serializer issue with default validator
 class ExerciseObjectView(APIView):
@@ -54,8 +56,8 @@ class ExerciseObjectView(APIView):
         try:
             data['exercise_data'] = ExerciseData.objects.filter(id=data['exercise_id']).first()
             data['workout'] = Workout.objects.filter(id=data['workout_id']).first()
-        except Exception as exc:
-            return JsonResponse({'status':500, 'data':repr(exc)})
+        except Exception as e:
+            return JsonResponse({'status':500, 'data':repr(e)})
         eos = ExerciseObjectSerializer()
         if eos.validate(data):
             exercise_object = eos.custom_validated_data

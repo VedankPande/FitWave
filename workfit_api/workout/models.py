@@ -27,4 +27,4 @@ class ExerciseObject(models.Model):
 
 #ExerciseData -> name, muscles worked etc
 #exerciseObject-> sets,reps,workout_object(fk),exercise_object
-#workout -> owner,exercises
+#workout -> owner,name,exercises
