@@ -36,3 +36,4 @@ class UserDailyIntake(models.Model):
    user = models.CharField(max_length=255)
    date = models.DateTimeField(default=now)
    food_data = models.ForeignKey(FoodData,on_delete=models.CASCADE)
+   amount = models.IntegerField()

@@ -4,9 +4,8 @@ from django.http import JsonResponse
 from .models import UserDailyIntake,FoodData
 from rest_framework.views import APIView
 from .serializers import DailyIntakeSerializer,FoodDataSerializer
-# Create your views here.
 
-
+#TODO: search functionality
 class FoodView(APIView):
 
     #returns all food data
@@ -16,8 +15,41 @@ class FoodView(APIView):
         data = loads(dumps(data))
         return JsonResponse({'status':200,'data':data})
 
+class FoodObjectView(APIView):
 
-#TODO: Complete this
+    def get(self,request):
+        try:
+            data = request.data
+            query = UserDailyIntake.objects.filter(user = data["user"])
+            data = DailyIntakeSerializer(instance=query,many=True).data
+            data = loads(dumps(data))
+            return JsonResponse({'status':200,'data':data})
+        except Exception as e:
+            return JsonResponse({'status':500,'data':repr(e)})
+
+    #requires food_data id,user,amount
+    def post(self,request):
+        data = request.data.copy()
+        try:
+            data['food_data'] = FoodData.objects.filter(id = data.id).first()
+        except Exception as exc:
+            pass
+        serializer = DailyIntakeSerializer()
+        if serializer.validate(data):
+            intake_object = serializer.custom_validated_data
+            return JsonResponse({'status':200,'data':DailyIntakeSerializer(instance=intake_object).data})
+        else:
+            return JsonResponse({'status':500,'data':{}})
+
+    #requires id
+    def delete(self,request):
+        pass
+
+
+
+##################################################################################################################################################################################
+
+#TODO: Complete this - experimental
 class FoodObjectQuery(ListAPIView):
 
     model = UserDailyIntake
@@ -28,20 +60,3 @@ class FoodObjectQuery(ListAPIView):
         user = self.request.query_params.get('user')
         weekly = self.request.query_params.get('weekly') # boolean value? - check if weekly view is required - might be better ways to do this (send all data for user and filter in front end)
         date = self.request.query_params.get('date')
-
-class FoodObjectView(APIView):
-
-    def get(self,request):
-        data = request.data
-        query = UserDailyIntake.objects.filter(user = data.user)
-        data = DailyIntakeSerializer(instance=query,many=True).data
-        data = loads(dumps(data))
-        return JsonResponse({'status':200,'data':data})
-    
-    #requires foodData id,user
-    def post(self,request):
-        data = request.data
-        pass
-
-    def delete(self,request):
-        pass
