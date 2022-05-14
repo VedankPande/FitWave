@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workfit_app/screens/home.dart';
-import 'package:workfit_app/screens/workoutSetsRoute.dart';
+import 'package:workfit_app/screens/workout/workoutSetsRoute.dart';
 import 'package:workfit_app/widgets/bodyStatsWidget.dart';
 import 'package:workfit_app/widgets/workoutWidget.dart';
 import 'package:page_transition/page_transition.dart';
@@ -34,7 +34,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               child: Column(
                 children: [
-                  const WorkoutCard(),
+                  const WorkoutCard(
+                    isCurrent: true,
+                  ),
                   TextButton(
                     onPressed: () {
                       Navigator.pushAndRemoveUntil(

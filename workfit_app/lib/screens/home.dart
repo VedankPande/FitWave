@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workfit_app/screens/homeRoute.dart';
-import 'package:workfit_app/screens/workoutSetsRoute.dart';
+import 'package:workfit_app/screens/workout/workoutSetsRoute.dart';
 import 'package:workfit_app/widgets/workoutWidget.dart';
 
 class Home extends StatefulWidget {

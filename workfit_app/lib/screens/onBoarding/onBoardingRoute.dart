@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workfit_app/screens/onBoarding/signup/signupRoute.dart';
-import 'package:workfit_app/screens/workoutRoute.dart';
+import 'package:workfit_app/screens/workout/workoutPostureRoute.dart';
 import 'package:workfit_app/widgets/coloredButton.dart';
 
 import 'package:page_transition/page_transition.dart';

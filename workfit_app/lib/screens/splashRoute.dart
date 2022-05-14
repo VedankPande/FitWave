@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   isLoggedIn() {
-    return false;
+    return true;
   }
 
   nextScreen() async {
@@ -68,8 +68,8 @@ class _SplashScreenState extends State<SplashScreen> {
               ],
             ),
           ),
-          SizedBox(height: 24),
-          Text(
+          const SizedBox(height: 24),
+          const Text(
             "FitWave",
             style: TextStyle(
               color: Color(0xff6c4cb0),
