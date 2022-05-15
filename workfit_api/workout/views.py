@@ -61,7 +61,7 @@ class ExerciseObjectView(APIView):
         eos = ExerciseObjectSerializer()
         if eos.validate(data):
             exercise_object = eos.custom_validated_data
-            return JsonResponse({'status': 200, 'data': ExerciseObjectSerializer(instance=exercise_object).data})
+            return JsonResponse({'status': 200, 'data': ExerciseObjectSerializer(instance = eos.create(exercise_object)).data})
         else:
             return JsonResponse({'status': 500, 'data':{}})
     
