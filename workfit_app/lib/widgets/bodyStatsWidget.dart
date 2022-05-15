@@ -17,8 +17,8 @@ class _bodyStatisticsCardState extends State<bodyStatisticsCard> {
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
         boxShadow: const [
-          BoxShadow(color: Colors.green, spreadRadius: 8),
-          BoxShadow(color: Colors.yellow, spreadRadius: 5),
+          // BoxShadow(color: Colors.green, spreadRadius: 8),
+          // BoxShadow(color: Colors.yellow, spreadRadius: 5),
         ],
       ),
       child: Column(

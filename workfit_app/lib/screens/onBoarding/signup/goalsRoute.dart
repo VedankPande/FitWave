@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:workfit_app/screens/home.dart';
 import 'package:workfit_app/widgets/coloredButton.dart';
@@ -13,6 +14,7 @@ class GoalsScreen extends StatefulWidget {
 }
 
 class _GoalsScreenState extends State<GoalsScreen> {
+  final LocalStorage storage = new LocalStorage('fitwave');
   String selected = "Lose weight";
   goalCard(heading, body, image) {
     bool isSelected = selected == heading;
@@ -180,6 +182,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
                   ColoredButton(
                     buttonText: "Save Details",
                     onPressed: () {
+                      storage.setItem('username', 'shantanu');
                       Navigator.pushAndRemoveUntil(
                           context,
                           PageTransition(

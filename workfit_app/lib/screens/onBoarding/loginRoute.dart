@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:workfit_app/screens/home.dart';
 import 'package:workfit_app/screens/onBoarding/signup/goalsRoute.dart';
 import 'package:workfit_app/screens/onBoarding/signup/signupRoute.dart';
 import 'package:workfit_app/widgets/borderButton.dart';
@@ -15,6 +17,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _BodyDetailsScreenState extends State<LoginScreen> {
+  final LocalStorage storage = new LocalStorage('fitwave');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,12 +73,13 @@ class _BodyDetailsScreenState extends State<LoginScreen> {
                   ColoredButton(
                     buttonText: "Login",
                     onPressed: () {
+                      storage.setItem('username', 'shantanu');
                       Navigator.push(
                         context,
                         PageTransition(
                           duration: Duration(microseconds: 500),
                           type: PageTransitionType.fade,
-                          child: GoalsScreen(),
+                          child: Home(),
                         ),
                       );
                     },

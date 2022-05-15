@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:workfit_app/screens/home.dart';
+import 'package:workfit_app/screens/onBoarding/onBoardingRoute.dart';
 import 'package:workfit_app/screens/workout/workoutSetsRoute.dart';
 import 'package:workfit_app/widgets/bodyStatsWidget.dart';
 import 'package:workfit_app/widgets/workoutWidget.dart';
@@ -13,6 +17,57 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final LocalStorage storage = new LocalStorage('fitwave');
+
+  var workouts = [
+    {
+      "id": 3,
+      "owner": "shantanu",
+      "name": "monday",
+      "workout_exercises": [
+        {
+          "id": 2,
+          "sets": 1,
+          "reps": 2,
+          "exercise_data": {
+            "id": 1,
+            "name": "ab crunch machine",
+            "muscles_worked": "abdominals"
+          },
+          "workout": 3
+        },
+        {
+          "id": 3,
+          "sets": 1,
+          "reps": 2,
+          "exercise_data": {
+            "id": 2,
+            "name": "ab roller",
+            "muscles_worked": "abdominals"
+          },
+          "workout": 3
+        }
+      ]
+    }
+  ];
+
+  buildCards() {
+    List<Widget> cards = [];
+    for (var i = 0; i < workouts.length; i++) {
+      var exercise = jsonDecode(jsonEncode(workouts[i]['workout_exercises']));
+      var count = exercise?.length;
+
+      cards.add(
+        WorkoutCard(
+          title: workouts[i]['name'].toString(),
+          count: count != null ? count : 0,
+          exercise: exercise,
+        ),
+      );
+    }
+    return Column(children: cards);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,9 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               child: Column(
                 children: [
-                  const WorkoutCard(
-                    isCurrent: true,
-                  ),
+                  buildCards(),
                   TextButton(
                     onPressed: () {
                       Navigator.pushAndRemoveUntil(
@@ -101,8 +154,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.white,
                 boxShadow: const [
-                  BoxShadow(color: Colors.green, spreadRadius: 8),
-                  BoxShadow(color: Colors.yellow, spreadRadius: 5),
+                  // BoxShadow(color: Colors.green, spreadRadius: 8),
+                  // BoxShadow(color: Colors.yellow, spreadRadius: 5),
                 ],
               ),
               child: Column(
@@ -115,6 +168,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+            ElevatedButton(
+                onPressed: () {
+                  storage.deleteItem('username');
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    PageTransition(
+                      duration: const Duration(microseconds: 500),
+                      type: PageTransitionType.fade,
+                      child: OnBoarding(),
+                    ),
+                    (route) => false,
+                  );
+                },
+                child: Text(
+                  'Logout',
+                ))
           ],
         ),
       ),

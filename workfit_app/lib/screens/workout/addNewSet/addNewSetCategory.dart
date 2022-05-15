@@ -1,8 +1,12 @@
+import 'dart:developer';
+import 'dart:ui';
+
 import 'package:flutter/material.dart ';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:workfit_app/screens/onBoarding/signup/bodyDetails.dart';
+import 'package:workfit_app/screens/services/api.dart';
 import 'package:workfit_app/screens/workout/addNewSet/addNewSetExercise.dart';
 import 'package:workfit_app/widgets/coloredButton.dart';
 import 'package:workfit_app/widgets/loginWidget.dart';
@@ -17,7 +21,31 @@ class AddNewSetCategoryScreen extends StatefulWidget {
 }
 
 class _AddNewSetCategoryScreenState extends State<AddNewSetCategoryScreen> {
-  card() {
+  var exercisesObj = {};
+
+  @override
+  void initState() {
+    getExercises();
+  }
+
+  getExercises() async {
+    var response = await RestApi().fetchExercises();
+    var responseObj = {};
+
+    for (var i = 0; i < response.length; i++) {
+      if (responseObj[response[i]['muscles_worked']] != null) {
+        responseObj[response[i]['muscles_worked']].add(response[i]);
+      } else {
+        responseObj[response[i]['muscles_worked']] = [];
+      }
+    }
+
+    setState(() {
+      exercisesObj = responseObj;
+    });
+  }
+
+  cardWidget(String title, exercises) {
     return TextButton(
       onPressed: () {
         Navigator.push(
@@ -25,7 +53,10 @@ class _AddNewSetCategoryScreenState extends State<AddNewSetCategoryScreen> {
           PageTransition(
             duration: Duration(microseconds: 500),
             type: PageTransitionType.fade,
-            child: AddNewSetExerciseScreen(),
+            child: AddNewSetExerciseScreen(
+              exercise: title,
+              exercises: exercises,
+            ),
           ),
         );
       },
@@ -53,7 +84,7 @@ class _AddNewSetCategoryScreenState extends State<AddNewSetCategoryScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "Chest",
+              title,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(0xff232323),
@@ -66,6 +97,47 @@ class _AddNewSetCategoryScreenState extends State<AddNewSetCategoryScreen> {
         ),
       ),
     );
+  }
+
+  buildCards() {
+    List<Widget> cards = [];
+    log(exercisesObj.toString());
+    exercisesObj.forEach((key, value) {
+      cards.add(
+        cardWidget(key, value),
+      );
+    });
+    List<Widget> rows = [];
+
+    for (var i = 1; i < cards.length; i += 2) {
+      rows.add(
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            cards[i - 1],
+            cards[i],
+          ],
+        ),
+      );
+    }
+
+    if (cards.length % 2 != 0) {
+      rows.add(
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            cards[cards.length - 1],
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.45,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Column(children: rows);
   }
 
   @override
@@ -100,26 +172,67 @@ class _AddNewSetCategoryScreenState extends State<AddNewSetCategoryScreen> {
                       )
                     ],
                   ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: textField(title: ''),
-                  ),
                   SizedBox(height: 20),
                   Row(
                     mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      card(),
-                      card(),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.95,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(2),
+                          border: Border.all(
+                            color: Color(0xff9a9a9a),
+                            width: 1,
+                          ),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 18,
+                              height: 18,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Image.asset(
+                                'assets/images/search.png',
+                              ),
+                              // child: FlutterLogo(size: 18),
+                            ),
+                            SizedBox(width: 16),
+                            Text(
+                              "Search exercises",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Color(0xff9a9a9a),
+                                fontSize: 16,
+                                fontFamily: "Avenir",
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      card(),
-                      card(),
-                    ],
+                  SizedBox(height: 20),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.74,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          buildCards(),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),

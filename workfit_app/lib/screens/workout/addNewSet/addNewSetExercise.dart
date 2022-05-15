@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart ';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,7 +10,12 @@ import 'package:workfit_app/widgets/loginWidget.dart';
 import 'package:workfit_app/widgets/textFieldWidget.dart';
 
 class AddNewSetExerciseScreen extends StatefulWidget {
-  const AddNewSetExerciseScreen({Key? key}) : super(key: key);
+  final String exercise;
+  final exercises;
+  const AddNewSetExerciseScreen({
+    required this.exercise,
+    required this.exercises,
+  });
 
   @override
   State<AddNewSetExerciseScreen> createState() =>
@@ -17,46 +24,39 @@ class AddNewSetExerciseScreen extends StatefulWidget {
 
 class _AddNewSetExerciseScreenState extends State<AddNewSetExerciseScreen> {
   bool isChecked = false;
-  card() {
-    return TextButton(
-      onPressed: null,
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.45,
-        height: 88,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6),
-          boxShadow: [
-            BoxShadow(
-              color: Color(0x3f9a9a9a),
-              blurRadius: 10,
-              offset: Offset(0, 3),
-            ),
-          ],
-          color: Colors.white,
+
+  card(String title) {
+    return Row(
+      children: [
+        Checkbox(
+          checkColor: Colors.white,
+          value: isChecked,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked = value!;
+            });
+          },
         ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 24,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "Chest",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xff232323),
-                fontSize: 20,
-                fontFamily: "Avenir",
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ],
-        ),
-      ),
+        Text(
+          title,
+          style: TextStyle(
+            color: Color(0xff232323),
+            fontSize: 16,
+            fontFamily: "Avenir",
+            fontWeight: FontWeight.w500,
+          ),
+        )
+      ],
     );
+  }
+
+  buildCards() {
+    List<Widget> cards = [];
+    for (var item in widget.exercises) {
+      cards.add(card(item['name']));
+    }
+
+    return Column(children: cards);
   }
 
   @override
@@ -81,7 +81,7 @@ class _AddNewSetExerciseScreenState extends State<AddNewSetExerciseScreen> {
                         icon: FaIcon(FontAwesomeIcons.arrowLeftLong),
                       ),
                       Text(
-                        "Chest",
+                        widget.exercise,
                         style: TextStyle(
                           color: Color(0xff232323),
                           fontSize: 20,
@@ -92,49 +92,15 @@ class _AddNewSetExerciseScreenState extends State<AddNewSetExerciseScreen> {
                     ],
                   ),
                   SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Checkbox(
-                        checkColor: Colors.white,
-                        value: isChecked,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            isChecked = value!;
-                          });
-                        },
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.83,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          buildCards(),
+                        ],
                       ),
-                      Text(
-                        "Flat bench press",
-                        style: TextStyle(
-                          color: Color(0xff232323),
-                          fontSize: 16,
-                          fontFamily: "Avenir",
-                          fontWeight: FontWeight.w500,
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Checkbox(
-                        checkColor: Colors.white,
-                        value: isChecked,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            isChecked = value!;
-                          });
-                        },
-                      ),
-                      Text(
-                        "Decline bench press",
-                        style: TextStyle(
-                          color: Color(0xff232323),
-                          fontSize: 16,
-                          fontFamily: "Avenir",
-                          fontWeight: FontWeight.w500,
-                        ),
-                      )
-                    ],
+                    ),
                   ),
                 ],
               ),

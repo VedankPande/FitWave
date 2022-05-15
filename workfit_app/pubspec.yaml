@@ -37,6 +37,7 @@ dependencies:
   tflite: ^1.1.2
   page_transition: ^2.0.5
   font_awesome_flutter: ^10.1.0
+  localstorage: ^4.0.0+1
 
 dev_dependencies:
   flutter_test:
