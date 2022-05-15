@@ -35,7 +35,7 @@ class ExerciseObjectSerializer(serializers.ModelSerializer):
 
 class WorkoutSerializer(serializers.ModelSerializer):
     
-    workout_exercises =ExerciseObjectSerializer(many=True)
+    workout_exercises =ExerciseObjectSerializer(many=True,required=False)
 
     class Meta:
         model = Workout
@@ -43,6 +43,7 @@ class WorkoutSerializer(serializers.ModelSerializer):
         fields = ('id','owner','name','workout_exercises')
 
     def create(self,validated_data):
+        print(validated_data)
         try:
             return Workout.objects.create(**validated_data)
         except Exception as exc:
