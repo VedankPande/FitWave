@@ -8,10 +8,9 @@ from .serializers import ExerciseDataSerializer, WorkoutSerializer, ExerciseObje
 #workoutview returns a workout along with its exercise details
 class WorkoutView(APIView):
     
-    def get(self,request):
+    def get(self,request,owner):
         try:
-            data = request.data #use owner to filter objects
-            query = Workout.objects.filter(owner = data["owner"])
+            query = Workout.objects.filter(owner = owner)
             data = WorkoutSerializer(instance=query,many=True).data
             data = loads(dumps(data))
             return JsonResponse({'status':200,"data":data})
