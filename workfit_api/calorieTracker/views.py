@@ -17,10 +17,9 @@ class FoodView(APIView):
 
 class FoodObjectView(APIView):
 
-    def get(self,request):
+    def get(self,request,user):
         try:
-            data = request.data
-            query = UserDailyIntake.objects.filter(user = data["user"])
+            query = UserDailyIntake.objects.filter(user = user)
             data = DailyIntakeSerializer(instance=query,many=True).data
             data = loads(dumps(data))
             return JsonResponse({'status':200,'data':data})
@@ -44,8 +43,6 @@ class FoodObjectView(APIView):
     #requires id
     def delete(self,request):
         pass
-
-
 
 ##################################################################################################################################################################################
 
