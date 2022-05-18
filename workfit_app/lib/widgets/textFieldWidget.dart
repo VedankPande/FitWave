@@ -26,9 +26,34 @@ class _textFieldState extends State<textField> {
             ),
           ),
           SizedBox(height: 4),
-          TextFormField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 48,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(3),
+              border: Border.all(
+                color: Color(0xffd5d5d5),
+                width: 1,
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 14,
+            ),
+            child: TextFormField(
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+              ),
+              style: TextStyle(
+                color: Color(0xff232323),
+                fontSize: 16,
+                fontFamily: "Avenir",
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],

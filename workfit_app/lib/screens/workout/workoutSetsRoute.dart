@@ -1,7 +1,13 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:workfit_app/screens/services/api.dart';
 import 'package:workfit_app/screens/workout/addNewSet/addNewSet.dart';
 import 'package:workfit_app/widgets/workoutWidget.dart';
+import 'package:http/http.dart' as http;
 
 class WorkoutSetsScreen extends StatefulWidget {
   const WorkoutSetsScreen({Key? key}) : super(key: key);
@@ -11,6 +17,38 @@ class WorkoutSetsScreen extends StatefulWidget {
 }
 
 class _WorkoutSetsScreenState extends State<WorkoutSetsScreen> {
+  var workouts = [];
+
+  @override
+  void initState() {
+    getWorkouts();
+  }
+
+  getWorkouts() async {
+    var response = await RestApi().fetchWorkout();
+
+    setState(() {
+      workouts = response;
+    });
+  }
+
+  buildCards() {
+    List<Widget> cards = [];
+    for (var i = 0; i < workouts.length; i++) {
+      var exercise = jsonDecode(jsonEncode(workouts[i]['workout_exercises']));
+      var count = exercise?.length;
+
+      cards.add(
+        WorkoutCard(
+          title: workouts[i]['name'].toString(),
+          count: count != null ? count : 0,
+          exercise: exercise,
+        ),
+      );
+    }
+    return Column(children: cards);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -24,7 +62,7 @@ class _WorkoutSetsScreenState extends State<WorkoutSetsScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Workout Sets",
+                    'Workout Sets',
                     style: TextStyle(
                       color: Color(0xff232323),
                       fontSize: 20,
@@ -57,15 +95,7 @@ class _WorkoutSetsScreenState extends State<WorkoutSetsScreen> {
                 ],
               ),
             ),
-            const WorkoutCard(
-              isCurrent: false,
-            ),
-            const WorkoutCard(
-              isCurrent: true,
-            ),
-            const WorkoutCard(
-              isCurrent: false,
-            ),
+            buildCards(),
           ],
         ),
       ),
