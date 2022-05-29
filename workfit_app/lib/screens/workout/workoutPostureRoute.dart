@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:workfit_app/widgets/postureWidget.dart';
 
 class WorkoutPostureScreen extends StatefulWidget {
   const WorkoutPostureScreen({Key? key}) : super(key: key);
@@ -48,12 +49,13 @@ class _WorkoutPostureScreenState extends State<WorkoutPostureScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            Image.asset(
-              'assets/images/sample_exercise.png',
-              fit: BoxFit.cover,
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-            ),
+            // Image.asset(
+            //   'assets/images/sample_exercise.png',
+            //   fit: BoxFit.cover,
+            //   height: MediaQuery.of(context).size.height,
+            //   width: MediaQuery.of(context).size.width,
+            // ),
+            PostureWidget(),
             Positioned(
               top: 0,
               right: 0,

@@ -38,6 +38,7 @@ dependencies:
   page_transition: ^2.0.5
   font_awesome_flutter: ^10.1.0
   localstorage: ^4.0.0+1
+  camera: ^0.9.7+1
 
 dev_dependencies:
   flutter_test:
