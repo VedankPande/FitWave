@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:page_transition/page_transition.dart';
+import 'package:workfit_app/authentication.dart';
 import 'package:workfit_app/screens/home.dart';
 import 'package:workfit_app/screens/onBoarding/onBoardingRoute.dart';
 import 'package:localstorage/localstorage.dart';
@@ -28,17 +29,15 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 3), nextScreen);
   }
 
-  isLoggedIn() {
-    return storage.getItem('username') != null ? true : false;
-  }
-
   nextScreen() async {
     Navigator.pushAndRemoveUntil(
         context,
         PageTransition(
           duration: const Duration(microseconds: 500),
           type: PageTransitionType.fade,
-          child: isLoggedIn() ? const Home() : const OnBoarding(),
+          child: await AuthenticationHelper().handleAuth()
+              ? const Home()
+              : const OnBoarding(),
         ),
         (route) => false);
   }

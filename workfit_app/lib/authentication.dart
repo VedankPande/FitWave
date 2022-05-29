@@ -4,6 +4,19 @@ class AuthenticationHelper {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   get user => _auth.currentUser;
 
+  Future handleAuth() async {
+    try {
+      print('user: ' + user.toString());
+      if (user != null) {
+        return true;
+      }
+      return false;
+    } on FirebaseAuthException catch (e) {
+      print(e.message);
+      return false;
+    }
+  }
+
   //SIGN UP METHOD
   Future signUp({required String email, required String password}) async {
     try {

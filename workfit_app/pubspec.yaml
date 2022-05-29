@@ -41,6 +41,7 @@ dependencies:
   camera: ^0.9.7+1
   firebase_core: ^1.17.1
   firebase_auth: ^3.3.19
+  fluttertoast: ^8.0.9
 
 dev_dependencies:
   flutter_test:

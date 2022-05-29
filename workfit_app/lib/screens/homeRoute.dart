@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:workfit_app/authentication.dart';
 import 'package:workfit_app/screens/home.dart';
 import 'package:workfit_app/screens/onBoarding/onBoardingRoute.dart';
 import 'package:workfit_app/screens/workout/workoutPostureRoute.dart';
@@ -171,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                storage.deleteItem('username');
+                AuthenticationHelper().signOut();
                 Navigator.pushAndRemoveUntil(
                   context,
                   PageTransition(
@@ -188,7 +189,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                storage.deleteItem('username');
                 Navigator.pushAndRemoveUntil(
                   context,
                   PageTransition(
@@ -202,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text(
                 'posture detection',
               ),
-            )
+            ),
           ],
         ),
       ),
