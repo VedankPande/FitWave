@@ -12,7 +12,7 @@ class DailyIntakeSerializer(serializers.ModelSerializer):
     food_data = FoodDataSerializer()
     class Meta:
         model = UserDailyIntake
-        fields = ('id','owner','date','food_data','amount')
+        fields = ('id','user','date','food_data','amount')
     
     def validate(self,data):
         request_fields = data.keys()
