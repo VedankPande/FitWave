@@ -30,13 +30,13 @@ class FoodObjectView(APIView):
     def post(self,request):
         data = request.data.copy()
         try:
-            data['food_data'] = FoodData.objects.filter(id = data.id).first()
+            data['food_data'] = FoodData.objects.filter(id = data["id"]).first()
         except Exception as exc:
-            pass
+            print(repr(exc))
         serializer = DailyIntakeSerializer()
         if serializer.validate(data):
             intake_object = serializer.custom_validated_data
-            return JsonResponse({'status':200,'data':DailyIntakeSerializer(instance=intake_object).data})
+            return JsonResponse({'status':200,'data':DailyIntakeSerializer(instance=serializer.create(intake_object)).data})
         else:
             return JsonResponse({'status':500,'data':{}})
 
