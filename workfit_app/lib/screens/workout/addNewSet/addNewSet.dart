@@ -49,7 +49,10 @@ class _AddNewSetScreenState extends State<AddNewSetScreen> {
                   ),
                   Container(
                     padding: EdgeInsets.all(10),
-                    child: textField(title: 'Workout set name'),
+                    child: textField(
+                      title: 'Workout set name',
+                      controller: TextEditingController(),
+                    ),
                   ),
                   SizedBox(height: 20),
                   Container(

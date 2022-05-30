@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:workfit_app/authentication.dart';
 import 'package:workfit_app/screens/home.dart';
 import 'package:workfit_app/screens/onBoarding/onBoardingRoute.dart';
+import 'package:workfit_app/screens/workout/workoutPostureRoute.dart';
 import 'package:workfit_app/screens/workout/workoutSetsRoute.dart';
 import 'package:workfit_app/widgets/bodyStatsWidget.dart';
 import 'package:workfit_app/widgets/workoutWidget.dart';
@@ -169,21 +171,38 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             ElevatedButton(
-                onPressed: () {
-                  storage.deleteItem('username');
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    PageTransition(
-                      duration: const Duration(microseconds: 500),
-                      type: PageTransitionType.fade,
-                      child: OnBoarding(),
-                    ),
-                    (route) => false,
-                  );
-                },
-                child: Text(
-                  'Logout',
-                ))
+              onPressed: () {
+                AuthenticationHelper().signOut();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  PageTransition(
+                    duration: const Duration(microseconds: 500),
+                    type: PageTransitionType.fade,
+                    child: OnBoarding(),
+                  ),
+                  (route) => false,
+                );
+              },
+              child: Text(
+                'Logout',
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  PageTransition(
+                    duration: const Duration(microseconds: 500),
+                    type: PageTransitionType.fade,
+                    child: WorkoutPostureScreen(),
+                  ),
+                  (route) => false,
+                );
+              },
+              child: Text(
+                'posture detection',
+              ),
+            ),
           ],
         ),
       ),

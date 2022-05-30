@@ -182,7 +182,6 @@ class _GoalsScreenState extends State<GoalsScreen> {
                   ColoredButton(
                     buttonText: "Save Details",
                     onPressed: () {
-                      storage.setItem('username', 'shantanu');
                       Navigator.pushAndRemoveUntil(
                           context,
                           PageTransition(

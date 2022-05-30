@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:workfit_app/authentication.dart';
 import 'package:workfit_app/screens/onBoarding/signup/bodyDetails.dart';
 import 'package:workfit_app/widgets/coloredButton.dart';
 import 'package:workfit_app/widgets/loginWidget.dart';
@@ -14,6 +16,21 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final fullNameController = TextEditingController();
+  final userNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    fullNameController.dispose();
+    userNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,10 +70,22 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                         ),
                         SizedBox(height: 10),
-                        textField(title: 'Full Name'),
-                        textField(title: 'Username'),
-                        textField(title: 'Email ID'),
-                        textField(title: 'Set password'),
+                        textField(
+                          title: 'Full Name',
+                          controller: fullNameController,
+                        ),
+                        textField(
+                          title: 'Username',
+                          controller: userNameController,
+                        ),
+                        textField(
+                          title: 'Email ID',
+                          controller: emailController,
+                        ),
+                        textField(
+                          title: 'Set password',
+                          controller: passwordController,
+                        ),
                       ],
                     ),
                   ),
@@ -72,15 +101,23 @@ class _SignupScreenState extends State<SignupScreen> {
                 children: [
                   ColoredButton(
                     buttonText: "Create Account",
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        PageTransition(
-                          duration: Duration(microseconds: 500),
-                          type: PageTransitionType.fade,
-                          child: BodyDetailsScreen(),
-                        ),
+                    onPressed: () async {
+                      var res = await AuthenticationHelper().signUp(
+                        email: emailController.text,
+                        password: passwordController.text,
                       );
+                      if (res == null) {
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            duration: Duration(microseconds: 500),
+                            type: PageTransitionType.fade,
+                            child: BodyDetailsScreen(),
+                          ),
+                        );
+                      } else {
+                        Fluttertoast.showToast(msg: res.toString());
+                      }
                     },
                   ),
                 ],

@@ -54,11 +54,26 @@ class _BodyDetailsScreenState extends State<BodyDetailsScreen> {
                           ),
                         ),
                         SizedBox(height: 10),
-                        textField(title: 'Age'),
-                        textField(title: 'Height (in cm)'),
-                        textField(title: 'Weight (in Kg)'),
-                        textField(title: 'Gender'),
-                        textField(title: 'Activity'),
+                        textField(
+                          title: 'Age',
+                          controller: TextEditingController(),
+                        ),
+                        textField(
+                          title: 'Height (in cm)',
+                          controller: TextEditingController(),
+                        ),
+                        textField(
+                          title: 'Weight (in Kg)',
+                          controller: TextEditingController(),
+                        ),
+                        textField(
+                          title: 'Gender',
+                          controller: TextEditingController(),
+                        ),
+                        textField(
+                          title: 'Activity',
+                          controller: TextEditingController(),
+                        ),
                       ],
                     ),
                   ),

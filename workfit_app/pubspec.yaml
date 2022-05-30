@@ -38,6 +38,10 @@ dependencies:
   page_transition: ^2.0.5
   font_awesome_flutter: ^10.1.0
   localstorage: ^4.0.0+1
+  camera: ^0.9.7+1
+  firebase_core: ^1.17.1
+  firebase_auth: ^3.3.19
+  fluttertoast: ^8.0.9
 
 dev_dependencies:
   flutter_test:
