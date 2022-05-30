@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:workfit_app/screens/onBoarding/signup/goalsRoute.dart';
 import 'package:workfit_app/screens/onBoarding/loginRoute.dart';
+import 'package:workfit_app/screens/services/authentication.dart';
 import 'package:workfit_app/widgets/borderButton.dart';
 import 'package:workfit_app/widgets/coloredButton.dart';
 import 'package:workfit_app/widgets/loginWidget.dart';
@@ -16,6 +17,12 @@ class BodyDetailsScreen extends StatefulWidget {
 }
 
 class _BodyDetailsScreenState extends State<BodyDetailsScreen> {
+  final ageController = TextEditingController();
+  final heightController = TextEditingController();
+  final weightController = TextEditingController();
+  final genderController = TextEditingController();
+  final activityController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,23 +63,23 @@ class _BodyDetailsScreenState extends State<BodyDetailsScreen> {
                         SizedBox(height: 10),
                         textField(
                           title: 'Age',
-                          controller: TextEditingController(),
+                          controller: ageController,
                         ),
                         textField(
                           title: 'Height (in cm)',
-                          controller: TextEditingController(),
+                          controller: heightController,
                         ),
                         textField(
                           title: 'Weight (in Kg)',
-                          controller: TextEditingController(),
+                          controller: weightController,
                         ),
                         textField(
                           title: 'Gender',
-                          controller: TextEditingController(),
+                          controller: genderController,
                         ),
                         textField(
                           title: 'Activity',
-                          controller: TextEditingController(),
+                          controller: activityController,
                         ),
                       ],
                     ),
@@ -89,7 +96,20 @@ class _BodyDetailsScreenState extends State<BodyDetailsScreen> {
                 children: [
                   BorderButton(
                     buttonText: "Next",
-                    onPressed: () {
+                    onPressed: () async {
+                      final age = ageController.text;
+                      final height = heightController.text;
+                      final weight = weightController.text;
+                      final gender = genderController.text;
+                      final activity = activityController.text;
+
+                      final ref = AuthenticationHelper().ref;
+                      await ref.child('age').set(age);
+                      await ref.child('height').set(height);
+                      await ref.child('weight').set(weight);
+                      await ref.child('gender').set(gender);
+                      await ref.child('activity').set(activity);
+
                       Navigator.push(
                         context,
                         PageTransition(

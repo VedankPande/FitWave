@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:workfit_app/authentication.dart';
+import 'package:workfit_app/screens/services/authentication.dart';
 import 'package:workfit_app/screens/home.dart';
 import 'package:workfit_app/screens/onBoarding/signup/goalsRoute.dart';
 import 'package:workfit_app/screens/onBoarding/signup/signupRoute.dart';
@@ -77,6 +77,7 @@ class _BodyDetailsScreenState extends State<LoginScreen> {
                         textField(
                           title: 'Set password',
                           controller: passwordController,
+                          obscureText: true,
                         ),
                       ],
                     ),

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:page_transition/page_transition.dart';
-import 'package:workfit_app/authentication.dart';
+import 'package:workfit_app/screens/services/authentication.dart';
 import 'package:workfit_app/screens/home.dart';
 import 'package:workfit_app/screens/onBoarding/onBoardingRoute.dart';
 import 'package:localstorage/localstorage.dart';

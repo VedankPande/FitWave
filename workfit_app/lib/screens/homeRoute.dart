@@ -1,8 +1,9 @@
 import 'dart:convert';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:workfit_app/authentication.dart';
+import 'package:workfit_app/screens/services/authentication.dart';
 import 'package:workfit_app/screens/home.dart';
 import 'package:workfit_app/screens/onBoarding/onBoardingRoute.dart';
 import 'package:workfit_app/screens/workout/workoutPostureRoute.dart';
@@ -20,6 +21,20 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final LocalStorage storage = new LocalStorage('fitwave');
+  String username = '';
+
+  @override
+  void initState() {
+    super.initState();
+    getUsername();
+  }
+
+  getUsername() async {
+    String uname = await AuthenticationHelper().getUsername();
+    setState(() {
+      username = uname;
+    });
+  }
 
   var workouts = [
     {
@@ -81,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Hi! Kaushik'),
+                  Text('Hi! $username'),
                   Image.network(
                     'https://static.wikia.nocookie.net/rockstargamesgtavicecity/images/6/6a/Artwork-GTAVC-TommyVercetti.jpg/revision/latest/scale-to-width-down/180?cb=20160522093004',
                   ),
@@ -161,8 +176,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               child: Column(
-                children: const [
-                  Text('Kaushik, Create your personalized workout set'),
+                children: [
+                  Text('$username, Create your personalized workout set'),
                   ElevatedButton(
                     onPressed: null,
                     child: Text('Create Set'),
