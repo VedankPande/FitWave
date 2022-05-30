@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-c_-=r-u4xdky1k81w-wkvnay1*vgl1ne=@(1hndm)it)l=e_x!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['10.0.2.2','127.0.0.1']
 
 
 # Application definition
@@ -86,7 +86,7 @@ DATABASES = {
 
         'USER': 'postgres',
 
-        'PASSWORD': 'password',
+        'PASSWORD': 'shanwinjf',
 
         'HOST': 'localhost',
 
