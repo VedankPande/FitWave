@@ -3,7 +3,7 @@ from django.db import models
 
 #TODO: Change owner to ownerid(int) once finalized
 class Workout(models.Model):
-    owner = models.CharField(max_length=20)
+    owner = models.CharField(max_length=36)
     name = models.CharField(max_length=50)
     
     def __str__(self) -> str:
