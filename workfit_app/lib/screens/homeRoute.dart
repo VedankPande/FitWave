@@ -298,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       SizedBox(height: 25),
                       Container(
-                        width: 328,
+                        width: MediaQuery.of(context).size.width,
                         height: 301,
                         child: Stack(
                           children: [
@@ -354,7 +354,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             Positioned(
-                              left: 176,
+                              right: 0,
                               top: 41,
                               child: bodyStatisticsCard(
                                 icon: 'body_statistics_weight.png',

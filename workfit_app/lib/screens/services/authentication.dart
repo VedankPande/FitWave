@@ -41,6 +41,7 @@ class AuthenticationHelper {
   Future signIn({required String email, required String password}) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+      await updateUserData(uid);
       return null;
     } on FirebaseAuthException catch (e) {
       return e.message;
@@ -50,7 +51,5 @@ class AuthenticationHelper {
   //SIGN OUT METHOD
   Future signOut() async {
     await _auth.signOut();
-
-    print('signout');
   }
 }

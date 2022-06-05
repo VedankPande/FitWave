@@ -18,7 +18,7 @@ class _bodyStatisticsCardState extends State<bodyStatisticsCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 152,
+      width: MediaQuery.of(context).size.width * 0.43,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
         border: Border.all(
