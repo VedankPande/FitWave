@@ -15,11 +15,7 @@ class AuthenticationHelper {
     try {
       log('user: ' + user.toString());
       if (user != null) {
-        DatabaseEvent event =
-            await AuthenticationHelper().ref.child('username').once();
-        username = event.snapshot.value.toString();
-        updateUsername(username);
-        updateUid(uid);
+        await updateUserData(uid);
         return true;
       }
       return false;

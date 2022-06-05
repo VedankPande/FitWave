@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:workfit_app/screens/services/userdata.dart';
 
 class RestApi {
-  final String uid = getUid();
+  final String uid = getUserData()['uid'];
   final String domain = 'http://10.0.2.2:8000/';
 
   fetchWorkout() async {

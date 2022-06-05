@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:localstorage/localstorage.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:workfit_app/screens/services/authentication.dart';
 import 'package:workfit_app/screens/home.dart';
@@ -19,8 +18,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _BodyDetailsScreenState extends State<LoginScreen> {
-  final LocalStorage storage = new LocalStorage('fitwave');
-
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 

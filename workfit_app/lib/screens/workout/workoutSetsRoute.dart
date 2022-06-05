@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:localstorage/localstorage.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:workfit_app/screens/services/api.dart';
 import 'package:workfit_app/screens/workout/addNewSet/addNewSet.dart';

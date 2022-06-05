@@ -1,23 +1,20 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:firebase_database/firebase_database.dart';
 import 'package:workfit_app/screens/services/authentication.dart';
 
-String username = '';
-Map<String, String> userData = {
-  'username': '',
-  'uid': '',
-};
+Map userData = {};
 
-String getUsername() {
-  return userData['username'].toString();
+getUserData() {
+  return userData;
 }
 
-updateUsername(username) async {
-  userData['username'] = username;
-}
-
-String getUid() {
-  return userData['uid'].toString();
-}
-
-updateUid(uid) async {
+updateUserData(uid) async {
+  final ref = FirebaseDatabase.instance.ref().child('users').child(uid);
+  DatabaseEvent event = await ref.once();
+  final res = event.snapshot.value;
+  userData = jsonDecode(jsonEncode(res));
   userData['uid'] = uid;
+  log(userData['username'].toString());
 }
