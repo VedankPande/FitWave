@@ -22,8 +22,7 @@ class WorkoutView(APIView):
         data = request.data
         s_data = WorkoutSerializer(data=data)
         if s_data.is_valid():
-            s_data.create(s_data.validated_data)
-            return JsonResponse({"status":200,"data": s_data.validated_data})
+            return JsonResponse({"status":200,"data": WorkoutSerializer(instance=s_data.create(s_data.validated_data)).data})
         else:
             return JsonResponse({"status":500,"data":s_data.errors})
     
