@@ -6,6 +6,7 @@ import 'package:localstorage/localstorage.dart';
 import 'package:workfit_app/screens/services/authentication.dart';
 import 'package:workfit_app/screens/home.dart';
 import 'package:workfit_app/screens/onBoarding/onBoardingRoute.dart';
+import 'package:workfit_app/screens/services/userdata.dart';
 import 'package:workfit_app/screens/workout/workoutPostureRoute.dart';
 import 'package:workfit_app/screens/workout/workoutSetsRoute.dart';
 import 'package:workfit_app/widgets/bodyStatsWidget.dart';
@@ -21,20 +22,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final LocalStorage storage = new LocalStorage('fitwave');
-  String username = '';
-
-  @override
-  void initState() {
-    super.initState();
-    getUsername();
-  }
-
-  getUsername() async {
-    String uname = await AuthenticationHelper().getUsername();
-    setState(() {
-      username = uname;
-    });
-  }
+  final String username = getUsername();
 
   var workouts = [
     {

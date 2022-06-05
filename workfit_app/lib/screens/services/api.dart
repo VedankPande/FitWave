@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'package:workfit_app/screens/services/userdata.dart';
 
 class RestApi {
-  final String username = 'shantanu';
+  final String uid = getUid();
 
   fetchWorkout() async {
     try {
-      final uri = 'http://10.0.2.2:8000/workout/' + username;
+      final uri = 'http://10.0.2.2:8000/workout/' + uid;
       var url = Uri.parse(uri);
       var response = await http.get(url);
       if (response.statusCode == 200) {

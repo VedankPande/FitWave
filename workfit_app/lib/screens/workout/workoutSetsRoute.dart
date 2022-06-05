@@ -21,15 +21,19 @@ class _WorkoutSetsScreenState extends State<WorkoutSetsScreen> {
 
   @override
   void initState() {
+    super.initState();
     getWorkouts();
   }
 
   getWorkouts() async {
     var response = await RestApi().fetchWorkout();
-
-    setState(() {
-      workouts = response;
-    });
+    try {
+      setState(() {
+        workouts = response;
+      });
+    } catch (exc) {
+      log(exc.toString());
+    }
   }
 
   buildCards() {
