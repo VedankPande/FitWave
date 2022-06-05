@@ -1,10 +1,12 @@
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart ';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:workfit_app/screens/onBoarding/signup/bodyDetails.dart';
+import 'package:workfit_app/screens/services/api.dart';
 import 'package:workfit_app/widgets/coloredButton.dart';
 import 'package:workfit_app/widgets/loginWidget.dart';
 import 'package:workfit_app/widgets/textFieldWidget.dart';
@@ -12,9 +14,11 @@ import 'package:workfit_app/widgets/textFieldWidget.dart';
 class AddNewSetExerciseScreen extends StatefulWidget {
   final String exercise;
   final exercises;
+  final workoutId;
   const AddNewSetExerciseScreen({
     required this.exercise,
     required this.exercises,
+    required this.workoutId,
   });
 
   @override
@@ -23,18 +27,21 @@ class AddNewSetExerciseScreen extends StatefulWidget {
 }
 
 class _AddNewSetExerciseScreenState extends State<AddNewSetExerciseScreen> {
-  bool isChecked = false;
+  Map<String, bool> checkboxMap = {};
 
-  card(String title) {
+  card(String title, id) {
     return Row(
       children: [
         Checkbox(
           checkColor: Colors.white,
-          value: isChecked,
+          value: checkboxMap[title],
           onChanged: (bool? value) {
             setState(() {
-              isChecked = value!;
+              checkboxMap[title] = value ?? false;
             });
+            if (value ?? false) {
+              RestApi().postExercise(widget.workoutId, id);
+            }
           },
         ),
         Text(
@@ -53,7 +60,10 @@ class _AddNewSetExerciseScreenState extends State<AddNewSetExerciseScreen> {
   buildCards() {
     List<Widget> cards = [];
     for (var item in widget.exercises) {
-      cards.add(card(item['name']));
+      if (checkboxMap[item['name']] == null) {
+        checkboxMap[item['name']] = false;
+      }
+      cards.add(card(item['name'], item['id']));
     }
 
     return Column(children: cards);

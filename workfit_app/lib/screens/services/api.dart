@@ -39,13 +39,45 @@ class RestApi {
     try {
       final uri = '${domain}workout/';
       final url = Uri.parse(uri);
+      final header = <String, String>{
+        'Content-Type': 'application/json',
+      };
       final body = jsonEncode(<String, String>{
         'owner': uid.toString(),
         'name': workoutName.toString(),
       });
-      log(body);
+      log(body.toString());
       var response = await http.post(
         url,
+        headers: header,
+        body: body,
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body)['data'];
+        return data;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  postExercise(workoutId, exerciseId) async {
+    try {
+      final uri = '${domain}exercise-add/';
+      final url = Uri.parse(uri);
+      final header = <String, String>{
+        'Content-Type': 'application/json',
+      };
+      final body = jsonEncode(<String, String>{
+        'sets': '2',
+        'reps': '10',
+        'workout_id': workoutId.toString(),
+        'exercise_id': exerciseId.toString(),
+      });
+      log(body.toString());
+      var response = await http.post(
+        url,
+        headers: header,
         body: body,
       );
       if (response.statusCode == 200) {

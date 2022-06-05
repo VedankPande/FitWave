@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart ';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:page_transition/page_transition.dart';
@@ -95,16 +97,18 @@ class _AddNewSetScreenState extends State<AddNewSetScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextButton(
-                          onPressed: () {
-                            RestApi().postWorkoutSet(
+                          onPressed: () async {
+                            final res = await RestApi().postWorkoutSet(
                               workoutNameController.text,
                             );
+                            final workoutId = res['id'];
                             Navigator.push(
                               context,
                               PageTransition(
                                 duration: Duration(microseconds: 500),
                                 type: PageTransitionType.fade,
-                                child: AddNewSetCategoryScreen(),
+                                child: AddNewSetCategoryScreen(
+                                    workoutId: workoutId),
                               ),
                             );
                           },
