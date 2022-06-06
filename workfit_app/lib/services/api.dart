@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
-import 'package:workfit_app/screens/services/userdata.dart';
+import 'package:workfit_app/services/userdata.dart';
 
 class RestApi {
   final String uid = getUserData()['uid'];

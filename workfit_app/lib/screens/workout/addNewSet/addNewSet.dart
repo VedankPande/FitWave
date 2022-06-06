@@ -8,7 +8,7 @@ import 'package:workfit_app/screens/workout/addNewSet/addNewSetCategory.dart';
 import 'package:workfit_app/widgets/coloredButton.dart';
 import 'package:workfit_app/widgets/loginWidget.dart';
 import 'package:workfit_app/widgets/textFieldWidget.dart';
-import 'package:workfit_app/screens/services/api.dart';
+import 'package:workfit_app/services/api.dart';
 
 class AddNewSetScreen extends StatefulWidget {
   const AddNewSetScreen({Key? key}) : super(key: key);

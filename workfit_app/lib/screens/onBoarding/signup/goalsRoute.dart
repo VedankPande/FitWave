@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:workfit_app/screens/home.dart';
-import 'package:workfit_app/screens/services/authentication.dart';
+import 'package:workfit_app/services/authentication.dart';
 import 'package:workfit_app/widgets/coloredButton.dart';
 import 'package:workfit_app/widgets/textFieldWidget.dart';
 

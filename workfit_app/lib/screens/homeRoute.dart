@@ -3,11 +3,11 @@ import 'dart:developer' as logger;
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:workfit_app/screens/services/api.dart';
-import 'package:workfit_app/screens/services/authentication.dart';
+import 'package:workfit_app/services/api.dart';
+import 'package:workfit_app/services/authentication.dart';
 import 'package:workfit_app/screens/home.dart';
 import 'package:workfit_app/screens/onBoarding/onBoardingRoute.dart';
-import 'package:workfit_app/screens/services/userdata.dart';
+import 'package:workfit_app/services/userdata.dart';
 import 'package:workfit_app/screens/workout/workoutPostureRoute.dart';
 import 'package:workfit_app/screens/workout/workoutSetsRoute.dart';
 import 'package:workfit_app/widgets/bodyStatsWidget.dart';

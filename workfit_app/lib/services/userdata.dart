@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:workfit_app/screens/services/authentication.dart';
+import 'package:workfit_app/services/authentication.dart';
 
 Map userData = {};
 
