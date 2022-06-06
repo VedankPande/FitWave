@@ -24,7 +24,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var workouts = [];
+  var workouts = getUserData()['workouts'];
   final String username = getUserData()['username'];
   String userInitials = '';
 

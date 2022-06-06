@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_database/firebase_database.dart';
+import 'package:workfit_app/services/api.dart';
 import 'package:workfit_app/services/authentication.dart';
 
 Map userData = {};
@@ -16,5 +17,11 @@ updateUserData(uid) async {
   final res = event.snapshot.value;
   userData = jsonDecode(jsonEncode(res));
   userData['uid'] = uid;
+  var workoutResponse = await RestApi().fetchWorkout();
+  try {
+    userData['workouts'] = workoutResponse;
+  } catch (exc) {
+    log(exc.toString());
+  }
   log(userData['username'].toString());
 }
