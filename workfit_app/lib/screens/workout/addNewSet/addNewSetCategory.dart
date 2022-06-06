@@ -13,7 +13,11 @@ import 'package:workfit_app/widgets/loginWidget.dart';
 import 'package:workfit_app/widgets/textFieldWidget.dart';
 
 class AddNewSetCategoryScreen extends StatefulWidget {
-  const AddNewSetCategoryScreen({Key? key}) : super(key: key);
+  final workoutId;
+  const AddNewSetCategoryScreen({
+    Key? key,
+    required this.workoutId,
+  }) : super(key: key);
 
   @override
   State<AddNewSetCategoryScreen> createState() =>
@@ -56,6 +60,7 @@ class _AddNewSetCategoryScreenState extends State<AddNewSetCategoryScreen> {
             child: AddNewSetExerciseScreen(
               exercise: title,
               exercises: exercises,
+              workoutId: widget.workoutId,
             ),
           ),
         );

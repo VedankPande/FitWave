@@ -3,10 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:page_transition/page_transition.dart';
-import 'package:workfit_app/authentication.dart';
+import 'package:workfit_app/screens/services/authentication.dart';
 import 'package:workfit_app/screens/home.dart';
 import 'package:workfit_app/screens/onBoarding/onBoardingRoute.dart';
-import 'package:localstorage/localstorage.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -18,7 +17,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final LocalStorage storage = new LocalStorage('fitwave');
   @override
   void initState() {
     super.initState();

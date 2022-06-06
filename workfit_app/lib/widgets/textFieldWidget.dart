@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 class textField extends StatefulWidget {
   final String title;
   final TextEditingController controller;
-  const textField({required this.title, required this.controller});
+  final bool obscureText;
+  const textField({
+    required this.title,
+    required this.controller,
+    this.obscureText = false,
+  });
 
   @override
   State<textField> createState() => _textFieldState();
@@ -43,6 +48,7 @@ class _textFieldState extends State<textField> {
             ),
             child: TextFormField(
               controller: widget.controller,
+              obscureText: widget.obscureText,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,

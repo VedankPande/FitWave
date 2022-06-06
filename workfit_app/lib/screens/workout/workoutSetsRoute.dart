@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:localstorage/localstorage.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:workfit_app/screens/services/api.dart';
 import 'package:workfit_app/screens/workout/addNewSet/addNewSet.dart';
@@ -21,15 +20,19 @@ class _WorkoutSetsScreenState extends State<WorkoutSetsScreen> {
 
   @override
   void initState() {
+    super.initState();
     getWorkouts();
   }
 
   getWorkouts() async {
     var response = await RestApi().fetchWorkout();
-
-    setState(() {
-      workouts = response;
-    });
+    try {
+      setState(() {
+        workouts = response;
+      });
+    } catch (exc) {
+      log(exc.toString());
+    }
   }
 
   buildCards() {

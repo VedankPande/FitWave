@@ -1,12 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:workfit_app/authentication.dart';
+import 'package:workfit_app/screens/services/authentication.dart';
 import 'package:workfit_app/screens/onBoarding/signup/bodyDetails.dart';
 import 'package:workfit_app/widgets/coloredButton.dart';
 import 'package:workfit_app/widgets/loginWidget.dart';
 import 'package:workfit_app/widgets/textFieldWidget.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -16,6 +18,7 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  FirebaseDatabase database = FirebaseDatabase.instance;
   final fullNameController = TextEditingController();
   final userNameController = TextEditingController();
   final emailController = TextEditingController();
@@ -85,6 +88,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         textField(
                           title: 'Set password',
                           controller: passwordController,
+                          obscureText: true,
                         ),
                       ],
                     ),
@@ -102,10 +106,19 @@ class _SignupScreenState extends State<SignupScreen> {
                   ColoredButton(
                     buttonText: "Create Account",
                     onPressed: () async {
+                      final email = emailController.text;
+                      final password = passwordController.text;
+                      final fullName = fullNameController.text;
+                      final username = userNameController.text;
                       var res = await AuthenticationHelper().signUp(
-                        email: emailController.text,
-                        password: passwordController.text,
+                        email: email,
+                        password: password,
                       );
+                      await AuthenticationHelper().ref.set({
+                        "fullName": fullName,
+                        "username": username,
+                        "email": email,
+                      });
                       if (res == null) {
                         Navigator.push(
                           context,

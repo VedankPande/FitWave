@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart ';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:page_transition/page_transition.dart';
@@ -6,6 +8,7 @@ import 'package:workfit_app/screens/workout/addNewSet/addNewSetCategory.dart';
 import 'package:workfit_app/widgets/coloredButton.dart';
 import 'package:workfit_app/widgets/loginWidget.dart';
 import 'package:workfit_app/widgets/textFieldWidget.dart';
+import 'package:workfit_app/screens/services/api.dart';
 
 class AddNewSetScreen extends StatefulWidget {
   const AddNewSetScreen({Key? key}) : super(key: key);
@@ -15,6 +18,7 @@ class AddNewSetScreen extends StatefulWidget {
 }
 
 class _AddNewSetScreenState extends State<AddNewSetScreen> {
+  final workoutNameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +55,7 @@ class _AddNewSetScreenState extends State<AddNewSetScreen> {
                     padding: EdgeInsets.all(10),
                     child: textField(
                       title: 'Workout set name',
-                      controller: TextEditingController(),
+                      controller: workoutNameController,
                     ),
                   ),
                   SizedBox(height: 20),
@@ -93,13 +97,18 @@ class _AddNewSetScreenState extends State<AddNewSetScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            final res = await RestApi().postWorkoutSet(
+                              workoutNameController.text,
+                            );
+                            final workoutId = res['id'];
                             Navigator.push(
                               context,
                               PageTransition(
                                 duration: Duration(microseconds: 500),
                                 type: PageTransitionType.fade,
-                                child: AddNewSetCategoryScreen(),
+                                child: AddNewSetCategoryScreen(
+                                    workoutId: workoutId),
                               ),
                             );
                           },
