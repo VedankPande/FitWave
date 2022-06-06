@@ -48,7 +48,7 @@ class _bodyStatisticsCardState extends State<bodyStatisticsCard> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Image.asset(
-                  'assets/images/' + widget.icon,
+                  'assets/images/home_body_statistics/' + widget.icon,
                   width: 24,
                   height: 24,
                 ),

@@ -18,10 +18,6 @@ updateUserData(uid) async {
   userData = jsonDecode(jsonEncode(res));
   userData['uid'] = uid;
   var workoutResponse = await RestApi().fetchWorkout();
-  try {
-    userData['workouts'] = workoutResponse;
-  } catch (exc) {
-    log(exc.toString());
-  }
+  userData['workouts'] = workoutResponse ?? [];
   log(userData['username'].toString());
 }

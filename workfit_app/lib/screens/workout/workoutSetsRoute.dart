@@ -29,7 +29,7 @@ class _WorkoutSetsScreenState extends State<WorkoutSetsScreen> {
     var response = await RestApi().fetchWorkout();
     try {
       setState(() {
-        workouts = response;
+        workouts = response ?? [];
       });
     } catch (exc) {
       log(exc.toString());

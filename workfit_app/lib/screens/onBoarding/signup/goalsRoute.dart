@@ -100,7 +100,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Image.asset(
-                        'assets/images/goals/' + image,
+                        'assets/images/on_boarding_goals/' + image,
                       ),
                     ),
                   ],

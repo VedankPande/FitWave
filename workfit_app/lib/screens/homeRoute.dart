@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var response = await RestApi().fetchWorkout();
     try {
       setState(() {
-        workouts = response;
+        workouts = response ?? [];
       });
     } catch (exc) {
       logger.log(exc.toString());

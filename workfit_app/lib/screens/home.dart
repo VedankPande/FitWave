@@ -26,6 +26,11 @@ class _HomeState extends State<Home> {
     HomeScreen(),
     Container(
       child: Center(
+        child: Text('Diary Not Implemented!'),
+      ),
+    ),
+    Container(
+      child: Center(
         child: Text('Insignths Not Implemented!'),
       ),
     ),
@@ -43,20 +48,66 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         onTap: onTabTapped,
         currentIndex: _currentIndex,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        selectedLabelStyle: TextStyle(
+            fontSize: 12,
+            fontFamily: "Avenir",
+            fontWeight: FontWeight.w800,
+            height: 2),
+        unselectedLabelStyle: TextStyle(
+          color: Color(0xff9a9a9a),
+          fontSize: 12,
+          fontFamily: "Avenir",
+          fontWeight: FontWeight.w800,
+        ),
         items: [
           BottomNavigationBarItem(
-            icon: Image.asset('assets/images/bottom_navbar_home.png'),
+            icon: Image.asset(
+              'assets/images/navBar/home_inactive.png',
+              height: 25,
+            ),
+            activeIcon: Image.asset(
+              'assets/images/navBar/home_active.png',
+              height: 25,
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('assets/images/bottom_navbar_chart.png'),
+            icon: Image.asset(
+              'assets/images/navBar/diary_inactive.png',
+              height: 25,
+            ),
+            activeIcon: Image.asset(
+              'assets/images/navBar/diary_active.png',
+              height: 25,
+            ),
+            label: 'Diary',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              'assets/images/navBar/chart_inactive.png',
+              height: 25,
+            ),
+            activeIcon: Image.asset(
+              'assets/images/navBar/chart_active.png',
+              height: 25,
+            ),
             label: 'Insights',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('assets/images/bottom_navbar_fitness-center.png'),
-            label: 'Workout sets',
+            icon: Image.asset(
+              'assets/images/navBar/fitness-center_inactive.png',
+              height: 25,
+            ),
+            activeIcon: Image.asset(
+              'assets/images/navBar/fitness-center_active.png',
+              height: 25,
+            ),
+            label: 'Sets',
           ),
         ],
       ),
