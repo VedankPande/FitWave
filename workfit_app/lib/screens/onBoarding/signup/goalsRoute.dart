@@ -181,11 +181,11 @@ class _GoalsScreenState extends State<GoalsScreen> {
                 children: [
                   ColoredButton(
                     buttonText: "Save Details",
-                    onPressed: () {
+                    onPressed: () async {
                       final ref = AuthenticationHelper().ref;
                       ref.child('goal').set(selected);
                       final uid = AuthenticationHelper().uid;
-                      updateUserData(uid);
+                      await updateUserData(uid);
                       Navigator.pushAndRemoveUntil(
                           context,
                           PageTransition(

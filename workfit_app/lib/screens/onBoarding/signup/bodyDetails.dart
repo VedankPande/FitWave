@@ -20,8 +20,17 @@ class _BodyDetailsScreenState extends State<BodyDetailsScreen> {
   final ageController = TextEditingController();
   final heightController = TextEditingController();
   final weightController = TextEditingController();
-  final genderController = TextEditingController();
-  final activityController = TextEditingController();
+  final genderDropdownItems = ['Male', 'Female'];
+  String genderDropdownValue = 'Male';
+  final activityDropdownItems = [
+    "Sedentary: little or no exercise",
+    "Light: exercise 1-3 times/week",
+    "Moderate: exercise 4-5 times/week",
+    "Active: daily exercise or intense exercise 3-4 times/week",
+    "Very active: intense exercise 6-7 times/week",
+  ];
+  String activityDropdownValue =
+      "Active: daily exercise or intense exercise 3-4 times/week";
 
   @override
   Widget build(BuildContext context) {
@@ -73,13 +82,122 @@ class _BodyDetailsScreenState extends State<BodyDetailsScreen> {
                           title: 'Weight (in Kg)',
                           controller: weightController,
                         ),
-                        textField(
-                          title: 'Gender',
-                          controller: genderController,
+                        Padding(
+                          padding: EdgeInsets.only(top: 20),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Gender",
+                                style: TextStyle(
+                                  color: Color(0xff9a9a9a),
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(3),
+                                  border: Border.all(
+                                    color: Color(0xffd5d5d5),
+                                    width: 1,
+                                  ),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 14,
+                                ),
+                                child: DropdownButton(
+                                  isExpanded: true,
+                                  value: genderDropdownValue,
+                                  items: genderDropdownItems.map(
+                                    (String items) {
+                                      return DropdownMenuItem(
+                                        child: Text(
+                                          items,
+                                          style: TextStyle(
+                                            color: Color(0xff232323),
+                                            fontSize: 16,
+                                            fontFamily: "Avenir",
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        value: items,
+                                      );
+                                    },
+                                  ).toList(),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      genderDropdownValue = newValue!;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        textField(
-                          title: 'Activity',
-                          controller: activityController,
+                        Padding(
+                          padding: EdgeInsets.only(top: 20),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Activity",
+                                style: TextStyle(
+                                  color: Color(0xff9a9a9a),
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(3),
+                                  border: Border.all(
+                                    color: Color(0xffd5d5d5),
+                                    width: 1,
+                                  ),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 14,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  isExpanded: true,
+                                  value: activityDropdownValue,
+                                  items: activityDropdownItems.map(
+                                    (String items) {
+                                      return DropdownMenuItem(
+                                        child: Text(
+                                          items,
+                                          style: TextStyle(
+                                            color: Color(0xff232323),
+                                            fontSize: 16,
+                                            fontFamily: "Avenir",
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        value: items,
+                                      );
+                                    },
+                                  ).toList(),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      activityDropdownValue = newValue!;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -100,15 +218,13 @@ class _BodyDetailsScreenState extends State<BodyDetailsScreen> {
                       final age = ageController.text;
                       final height = heightController.text;
                       final weight = weightController.text;
-                      final gender = genderController.text;
-                      final activity = activityController.text;
 
                       final ref = AuthenticationHelper().ref;
-                      await ref.child('age').set(age);
-                      await ref.child('height').set(height);
-                      await ref.child('weight').set(weight);
-                      await ref.child('gender').set(gender);
-                      await ref.child('activity').set(activity);
+                      await ref.child('age').set(int.parse(age));
+                      await ref.child('height').set(double.parse(height));
+                      await ref.child('weight').set(int.parse(weight));
+                      await ref.child('gender').set(genderDropdownValue);
+                      await ref.child('activity').set(activityDropdownValue);
 
                       Navigator.push(
                         context,

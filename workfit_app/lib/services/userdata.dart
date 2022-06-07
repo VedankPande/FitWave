@@ -21,3 +21,7 @@ updateUserData(uid) async {
   userData['workouts'] = workoutResponse ?? [];
   log(userData['username'].toString());
 }
+
+updateWorkouts(data) {
+  userData['workouts'] = data ?? [];
+}

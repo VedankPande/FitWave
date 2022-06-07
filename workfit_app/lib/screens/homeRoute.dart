@@ -33,9 +33,13 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     getWorkouts();
     final userFullName = getUserData()['fullName'].toString().split(' ');
-    userInitials += userFullName[0][0].toUpperCase();
-    if (userFullName.length > 1) {
-      userInitials += userFullName[userFullName.length - 1][0].toUpperCase();
+    try {
+      userInitials += userFullName[0][0].toUpperCase();
+      if (userFullName.length > 1) {
+        userInitials += userFullName[userFullName.length - 1][0].toUpperCase();
+      }
+    } catch (e) {
+      logger.log(e.toString());
     }
   }
 
@@ -66,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       cards.add(
         TextButton(
+          child: const Text("View workout sets"),
           onPressed: () {
             Navigator.pushAndRemoveUntil(
               context,
@@ -73,13 +78,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 duration: const Duration(microseconds: 500),
                 type: PageTransitionType.fade,
                 child: const Home(
-                  currentIndex: 2,
+                  currentIndex: 3,
                 ),
               ),
               (route) => false,
             );
           },
-          child: const Text("View workout sets"),
         ),
       );
     }

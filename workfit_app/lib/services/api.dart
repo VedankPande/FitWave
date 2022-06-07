@@ -14,6 +14,7 @@ class RestApi {
       var response = await http.get(url);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body)['data'];
+        updateWorkouts(data);
         return data;
       }
     } catch (e) {
