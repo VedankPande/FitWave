@@ -3,11 +3,11 @@ import 'dart:developer' as logger;
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:workfit_app/screens/services/api.dart';
-import 'package:workfit_app/screens/services/authentication.dart';
+import 'package:workfit_app/services/api.dart';
+import 'package:workfit_app/services/authentication.dart';
 import 'package:workfit_app/screens/home.dart';
 import 'package:workfit_app/screens/onBoarding/onBoardingRoute.dart';
-import 'package:workfit_app/screens/services/userdata.dart';
+import 'package:workfit_app/services/userdata.dart';
 import 'package:workfit_app/screens/workout/workoutPostureRoute.dart';
 import 'package:workfit_app/screens/workout/workoutSetsRoute.dart';
 import 'package:workfit_app/widgets/bodyStatsWidget.dart';
@@ -24,7 +24,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var workouts = [];
+  var workouts = getUserData()['workouts'];
   final String username = getUserData()['username'];
   String userInitials = '';
 
@@ -33,9 +33,13 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     getWorkouts();
     final userFullName = getUserData()['fullName'].toString().split(' ');
-    userInitials += userFullName[0][0].toUpperCase();
-    if (userFullName.length > 1) {
-      userInitials += userFullName[userFullName.length - 1][0].toUpperCase();
+    try {
+      userInitials += userFullName[0][0].toUpperCase();
+      if (userFullName.length > 1) {
+        userInitials += userFullName[userFullName.length - 1][0].toUpperCase();
+      }
+    } catch (e) {
+      logger.log(e.toString());
     }
   }
 
@@ -43,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var response = await RestApi().fetchWorkout();
     try {
       setState(() {
-        workouts = response;
+        workouts = response ?? [];
       });
     } catch (exc) {
       logger.log(exc.toString());
@@ -66,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       cards.add(
         TextButton(
+          child: const Text("View workout sets"),
           onPressed: () {
             Navigator.pushAndRemoveUntil(
               context,
@@ -73,13 +78,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 duration: const Duration(microseconds: 500),
                 type: PageTransitionType.fade,
                 child: const Home(
-                  currentIndex: 2,
+                  currentIndex: 3,
                 ),
               ),
               (route) => false,
             );
           },
-          child: const Text("View workout sets"),
         ),
       );
     }

@@ -3,8 +3,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:workfit_app/screens/services/api.dart';
+import 'package:workfit_app/services/api.dart';
 import 'package:workfit_app/screens/workout/addNewSet/addNewSet.dart';
+import 'package:workfit_app/services/userdata.dart';
 import 'package:workfit_app/widgets/workoutWidget.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,7 +17,7 @@ class WorkoutSetsScreen extends StatefulWidget {
 }
 
 class _WorkoutSetsScreenState extends State<WorkoutSetsScreen> {
-  var workouts = [];
+  var workouts = getUserData()['workouts'];
 
   @override
   void initState() {
@@ -28,7 +29,7 @@ class _WorkoutSetsScreenState extends State<WorkoutSetsScreen> {
     var response = await RestApi().fetchWorkout();
     try {
       setState(() {
-        workouts = response;
+        workouts = response ?? [];
       });
     } catch (exc) {
       log(exc.toString());

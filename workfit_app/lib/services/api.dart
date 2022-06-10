@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
-import 'package:workfit_app/screens/services/userdata.dart';
+import 'package:workfit_app/services/userdata.dart';
 
 class RestApi {
   final String uid = getUserData()['uid'];
@@ -14,6 +14,7 @@ class RestApi {
       var response = await http.get(url);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body)['data'];
+        updateWorkouts(data);
         return data;
       }
     } catch (e) {

@@ -43,6 +43,7 @@ dependencies:
   fluttertoast: ^8.0.9
   firebase_database: ^9.0.15
   simple_circular_progress_bar: ^1.0.1
+  carousel_slider: ^4.1.1
 
 dev_dependencies:
   flutter_test:
@@ -74,7 +75,9 @@ flutter:
     - assets/
     - assets/images/
     - assets/images/on_boarding/
-    - assets/images/goals/
+    - assets/images/home_body_statistics/
+    - assets/images/on_boarding_goals/
+    - assets/images/navBar/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
