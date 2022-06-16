@@ -11,6 +11,7 @@ import 'package:workfit_app/services/userdata.dart';
 import 'package:workfit_app/screens/workout/workoutPostureRoute.dart';
 import 'package:workfit_app/screens/workout/workoutSetsRoute.dart';
 import 'package:workfit_app/widgets/bodyStatsWidget.dart';
+import 'package:workfit_app/widgets/image_selector.dart';
 import 'package:workfit_app/widgets/workoutWidget.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
@@ -402,6 +403,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         child: Text(
                           'posture detection',
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            PageTransition(
+                              duration: const Duration(microseconds: 500),
+                              type: PageTransitionType.fade,
+                              child: ImageSelector(),
+                            ),
+                            (route) => false,
+                          );
+                        },
+                        child: Text(
+                          'tflite',
                         ),
                       ),
                     ],

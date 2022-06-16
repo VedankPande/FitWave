@@ -1,7 +1,13 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:tflite/tflite.dart';
+import 'package:workfit_app/tflite/movenet.dart';
+import 'package:workfit_app/utils/isolate_utils.dart';
 import 'dart:math' as math;
+
+import 'package:workfit_app/widgets/image_selector.dart';
 
 class PostureWidget extends StatefulWidget {
   const PostureWidget({Key? key}) : super(key: key);
@@ -10,15 +16,24 @@ class PostureWidget extends StatefulWidget {
   State<PostureWidget> createState() => _PostureWidgetState();
 }
 
-class _PostureWidgetState extends State<PostureWidget> {
+class _PostureWidgetState extends State<PostureWidget> with WidgetsBindingObserver{
   List<CameraDescription>? cameras;
   CameraController? controller;
-  bool isDetecting = false;
+  bool predicting = false;
+  Movenet? _movenet;
+  IsolateUtils? _isolateUtils;
 
   @override
   void initState() {
     super.initState();
     getCamera();
+  }
+
+  void initStateMethod() async{
+    WidgetsBinding.instance?.addObserver(this);
+    _isolateUtils = IsolateUtils();
+    await _isolateUtils?.start();
+
   }
 
   getCamera() async {
@@ -44,46 +59,48 @@ class _PostureWidgetState extends State<PostureWidget> {
       controller = new CameraController(
         cameras![1],
         ResolutionPreset.high,
+        enableAudio: false
       );
-      controller!.initialize().then((_) {
+      controller?.initialize().then((_) {
         if (!mounted) {
           return;
         }
         setState(() {});
 
-        controller!.startImageStream((CameraImage img) {
-          // if (!isDetecting) {
-          //   isDetecting = true;
+        controller?.startImageStream((CameraImage img) {
 
-          //   int startTime = DateTime.now().millisecondsSinceEpoch;
-
-          //   Tflite.runPoseNetOnFrame(
-          //     bytesList: img.planes.map((plane) {
-          //       return plane.bytes;
-          //     }).toList(),
-          //     imageHeight: img.height,
-          //     imageWidth: img.width,
-          //     //numResults: 2,
-          //     numResults: 1,
-          //     rotation: -90,
-          //     threshold: 0.1,
-          //     nmsRadius: 10,
-          //   ).then((recognitions) {
-          //     int endTime = new DateTime.now().millisecondsSinceEpoch;
-          //     print("Detection took ${endTime - startTime}");
-          //     widget.setRecognitions(recognitions, img.height, img.width);
-
-          //     isDetecting = false;
-          //   });
-          // }
         });
       });
     }
   }
-
+  
+  Future<List<int>> inference(IsolateData isolateData) async{
+    ReceivePort receivePort = ReceivePort();
+   _isolateUtils?.sendPort?.send(isolateData..responsePort = receivePort.sendPort);
+   var results = await receivePort.first;
+   return results;
+  }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    switch (state) {
+      case AppLifecycleState.paused:
+        controller?.stopImageStream();
+        break;
+      case AppLifecycleState.resumed:
+      if (controller != null){
+        if (!controller!.value.isStreamingImages) {
+          await controller?.startImageStream((CameraImage img){});
+        }
+      }
+        break;
+      default:
+    }
+  }
   @override
   void dispose() {
-    controller!.dispose();
+    if(controller!=null){
+      controller!.dispose();
+    }    
     super.dispose();
   }
 
