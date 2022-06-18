@@ -391,14 +391,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.pushAndRemoveUntil(
+                          Navigator.push(
                             context,
                             PageTransition(
                               duration: const Duration(microseconds: 500),
                               type: PageTransitionType.fade,
                               child: WorkoutPostureScreen(),
                             ),
-                            (route) => false,
                           );
                         },
                         child: Text(
