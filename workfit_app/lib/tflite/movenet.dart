@@ -7,7 +7,7 @@ import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 
 class Movenet{
 
-  Interpreter? _interpreter;
+  Interpreter? interpreter;
 
   final InterpreterOptions _interpreterOptions = InterpreterOptions()..useNnApiForAndroid =true;
   
@@ -28,11 +28,11 @@ class Movenet{
   
   // load the specified model and get input/output tensor information
   void loadModel({Interpreter? interpreter}) async {
-    _interpreter =  interpreter ?? await Interpreter.fromAsset(modelName, options: _interpreterOptions);
+    interpreter =  interpreter ?? await Interpreter.fromAsset(modelName, options: _interpreterOptions);
     print("model successfully loaded");
-    if (_interpreter != null){
-      var outputTensor = _interpreter!.getOutputTensor(0);
-      var inputTensor = _interpreter!.getInputTensor(0);
+    if (interpreter != null){
+      var outputTensor = interpreter.getOutputTensor(0);
+      var inputTensor = interpreter.getInputTensor(0);
       _inputShape = inputTensor.shape;
       _inputType = inputTensor.type;
       _outputShape = outputTensor.shape;
@@ -55,7 +55,7 @@ class Movenet{
     
     try{
       final run_init = DateTime.now().millisecondsSinceEpoch;
-      _interpreter?.run(_inputImage.buffer, _outputBuffer.getBuffer());
+      interpreter?.run(_inputImage.buffer, _outputBuffer.getBuffer());
       final run_post = DateTime.now().millisecondsSinceEpoch - run_init;
 
       print('Time to get predictions: $run_post ms');

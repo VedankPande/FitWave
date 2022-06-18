@@ -1,4 +1,5 @@
 import 'dart:isolate';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -26,13 +27,19 @@ class _PostureWidgetState extends State<PostureWidget> with WidgetsBindingObserv
   @override
   void initState() {
     super.initState();
-    getCamera();
+    initStateMethod();
   }
 
   void initStateMethod() async{
     WidgetsBinding.instance?.addObserver(this);
+
+    //spawn new isolate
     _isolateUtils = IsolateUtils();
     await _isolateUtils?.start();
+
+    // init camera
+    print("intializing camera");
+    getCamera();
 
   }
 
@@ -44,21 +51,21 @@ class _PostureWidgetState extends State<PostureWidget> with WidgetsBindingObserv
         cameras = cameras;
       });
 
-      print('cameras from home' + cameras.toString());
+      log('cameras from home' + cameras.toString());
       startProcess();
     } on CameraException catch (e) {
-      print('Error: $e.code\nError Message: $e.message');
+      log('Error: $e.code\nError Message: $e.message');
     }
   }
 
   startProcess() {
     if (cameras == null || cameras!.isEmpty) {
-      print('No camera is found');
+      log('No camera is found');
     } else {
       // ignore: unnecessary_new
       controller = new CameraController(
         cameras![1],
-        ResolutionPreset.high,
+        ResolutionPreset.medium,
         enableAudio: false
       );
       controller?.initialize().then((_) {
@@ -67,19 +74,46 @@ class _PostureWidgetState extends State<PostureWidget> with WidgetsBindingObserv
         }
         setState(() {});
 
-        controller?.startImageStream((CameraImage img) {
+        print("starting image stream");
+        controller?.startImageStream(cameraControllerCallback);
+      });
+    }
+  }
 
-        });
+  cameraControllerCallback(CameraImage image) async{
+    print("in camera callback");
+    if (true){
+      if (predicting){
+        print("still predicting previous frame");
+        return;
+      }
+      setState(() {
+        predicting = true;
+      });
+
+      //create isolate data using current image
+      var isolateData = IsolateData(image, _movenet?.interpreter!.address);
+      print("isolate data in posturewidget $isolateData");
+      //run inference in new isolate and return results
+      print("waiting for inference...");
+      String results = await inference(isolateData);
+
+      log(results);
+
+      setState(() {
+        predicting = false;
       });
     }
   }
   
-  Future<List<int>> inference(IsolateData isolateData) async{
+  Future<String> inference(IsolateData isolateData) async{
     ReceivePort receivePort = ReceivePort();
    _isolateUtils?.sendPort?.send(isolateData..responsePort = receivePort.sendPort);
    var results = await receivePort.first;
+   log("results in inference $results");
    return results;
   }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     switch (state) {
@@ -89,7 +123,7 @@ class _PostureWidgetState extends State<PostureWidget> with WidgetsBindingObserv
       case AppLifecycleState.resumed:
       if (controller != null){
         if (!controller!.value.isStreamingImages) {
-          await controller?.startImageStream((CameraImage img){});
+          await controller?.startImageStream(cameraControllerCallback);
         }
       }
         break;
@@ -100,7 +134,8 @@ class _PostureWidgetState extends State<PostureWidget> with WidgetsBindingObserv
   void dispose() {
     if(controller!=null){
       controller!.dispose();
-    }    
+    }
+    WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
   }
 
