@@ -19,6 +19,38 @@ class AddFoodScreen extends StatefulWidget {
 }
 
 class _AddFoodScreenState extends State<AddFoodScreen> {
+  List<Widget> foodWidgets = [];
+  @override
+  void initState() {
+    super.initState();
+    fetchFood();
+  }
+
+  fetchFood() async {
+    List foodList = await RestApi().fetchFoods();
+    List<Widget> listWidgets = [];
+    log(foodList.length.toString());
+    for (final food in foodList.sublist(0, 5)) {
+      log('hello');
+      listWidgets.add(
+        foodCard(
+          context,
+          food['name'],
+          "1 serving",
+          food['calorie'],
+          widget.title,
+          food['carbohydrate'],
+          food['protein'],
+          food['fat'],
+        ),
+      );
+    }
+    log(listWidgets.toString());
+    setState(() {
+      foodWidgets = listWidgets;
+    });
+  }
+
   final workoutNameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -127,50 +159,7 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
                     ),
                   ),
                   Column(
-                    children: [
-                      foodCard(
-                        context,
-                        "Jeera Rice",
-                        "2 servings, bowls",
-                        "400 Kcal",
-                        widget.title,
-                      ),
-                      foodCard(
-                        context,
-                        "Grilled Chicken",
-                        "2 servings, pieces",
-                        "180 Kcal",
-                        widget.title,
-                      ),
-                      foodCard(
-                        context,
-                        "Jeera Rice",
-                        "2 servings, bowls",
-                        "400 Kcal",
-                        widget.title,
-                      ),
-                      foodCard(
-                        context,
-                        "Grilled Chicken",
-                        "2 servings, pieces",
-                        "180 Kcal",
-                        widget.title,
-                      ),
-                      foodCard(
-                        context,
-                        "Jeera Rice",
-                        "2 servings, bowls",
-                        "400 Kcal",
-                        widget.title,
-                      ),
-                      foodCard(
-                        context,
-                        "Grilled Chicken",
-                        "2 servings, pieces",
-                        "180 Kcal",
-                        widget.title,
-                      ),
-                    ],
+                    children: foodWidgets,
                   ),
                 ],
               ),
@@ -182,7 +171,16 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
   }
 }
 
-foodCard(BuildContext context, title, servings, calories, meal) {
+foodCard(
+  BuildContext context,
+  title,
+  servings,
+  calories,
+  meal,
+  carbs,
+  protein,
+  fat,
+) {
   return TextButton(
     onPressed: () {
       Navigator.push(
@@ -193,6 +191,10 @@ foodCard(BuildContext context, title, servings, calories, meal) {
           child: MealDetailsScreen(
             meal: meal,
             food: title,
+            calories: calories,
+            carbs: carbs,
+            protein: protein,
+            fat: fat,
           ),
         ),
       );
@@ -226,7 +228,7 @@ foodCard(BuildContext context, title, servings, calories, meal) {
                   ),
                 ),
                 Text(
-                  calories,
+                  "${double.parse(calories).toStringAsFixed(0)} Kcal",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color(0xff9a9a9a),

@@ -6,10 +6,18 @@ import 'package:workfit_app/widgets/coloredButton.dart';
 class MealDetailsScreen extends StatefulWidget {
   final String meal;
   final String food;
+  final String calories;
+  final String carbs;
+  final String protein;
+  final String fat;
   const MealDetailsScreen({
     Key? key,
     required this.meal,
     required this.food,
+    required this.calories,
+    required this.carbs,
+    required this.protein,
+    required this.fat,
   }) : super(key: key);
 
   @override
@@ -225,13 +233,14 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                                     context,
                                     'assets/images/nutrition/calories.png',
                                     "Calories",
-                                    '290',
+                                    double.parse(widget.calories)
+                                        .toStringAsFixed(0),
                                   ),
                                   nutritionCard(
                                     context,
                                     'assets/images/nutrition/carbs.png',
                                     "Carbs",
-                                    '10g',
+                                    '${double.parse(widget.carbs).toStringAsFixed(2)}g',
                                   ),
                                 ],
                               ),
@@ -245,13 +254,13 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                                     context,
                                     'assets/images/nutrition/protein.png',
                                     "Protein",
-                                    '25g',
+                                    '${double.parse(widget.protein).toStringAsFixed(2)}g',
                                   ),
                                   nutritionCard(
                                     context,
                                     'assets/images/nutrition/fat.png',
                                     "Fat",
-                                    '12g',
+                                    '${double.parse(widget.fat).toStringAsFixed(2)}g',
                                   ),
                                 ],
                               ),
