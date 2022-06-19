@@ -11,6 +11,7 @@ import 'package:workfit_app/services/userdata.dart';
 import 'package:workfit_app/screens/workout/workoutPostureRoute.dart';
 import 'package:workfit_app/screens/workout/workoutSetsRoute.dart';
 import 'package:workfit_app/widgets/bodyStatsWidget.dart';
+import 'package:workfit_app/widgets/caloriesGoalWidget.dart';
 import 'package:workfit_app/widgets/image_selector.dart';
 import 'package:workfit_app/widgets/workoutWidget.dart';
 import 'package:page_transition/page_transition.dart';
@@ -166,140 +167,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: [
                       SizedBox(height: 25),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color(0x3f9a9a9a),
-                              blurRadius: 10,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                          color: Colors.white,
-                        ),
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Daily Calories Goal",
-                                        style: TextStyle(
-                                          color: Color(0xff9a9a9a),
-                                          fontSize: 14,
-                                          fontFamily: "Avenir",
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      SizedBox(height: 4),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "1640",
-                                            style: TextStyle(
-                                              color: Color(0xff232323),
-                                              fontSize: 20,
-                                              fontFamily: "Avenir",
-                                              fontWeight: FontWeight.w800,
-                                            ),
-                                          ),
-                                          Text(
-                                            " /2030 Kcal",
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                SimpleCircularProgressBar(
-                                  startAngle: 180,
-                                  progressStrokeWidth: 6,
-                                  backStrokeWidth: 6,
-                                  progressColors: [
-                                    Color(0xff9066ea),
-                                    Color(0xff6c4cb0)
-                                  ],
-                                  backColor: Color(0xffD6D6D6),
-                                  animationDuration: 2,
-                                  mergeMode: true,
-                                  valueNotifier: ValueNotifier(85),
-                                ),
-                                Container(
-                                  width: 110,
-                                  height: 110,
-                                  child: Stack(
-                                    children: [
-                                      Positioned.fill(
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                "Remaining",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  color: Color(0xff757575),
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                              SizedBox(height: 5),
-                                              Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Text(
-                                                    "390",
-                                                    style: TextStyle(
-                                                      color: Color(0xff232323),
-                                                      fontSize: 20,
-                                                      fontFamily: "Avenir",
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    " Kcal",
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                      CaloriesGoalWidget(
+                        calorieConsumed: 1640,
+                        calorieGoal: 2030,
                       ),
                       SizedBox(height: 25),
                       Container(

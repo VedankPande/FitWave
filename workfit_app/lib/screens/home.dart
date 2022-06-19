@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:workfit_app/screens/diary/diaryRoute.dart';
 import 'package:workfit_app/screens/homeRoute.dart';
 import 'package:workfit_app/screens/workout/workoutSetsRoute.dart';
 import 'package:workfit_app/widgets/workoutWidget.dart';
@@ -32,13 +33,7 @@ class _HomeState extends State<Home> {
 
   final List<Widget> _children = [
     HomeScreen(),
-    Container(
-      height: 200,
-      width: 200,
-      child: Center(
-        child: Text('Diary Not Implemented!'),
-      ),
-    ),
+    DiaryScreen(),
     Container(
       child: SafeArea(
         child: AspectRatio(

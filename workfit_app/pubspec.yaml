@@ -78,10 +78,12 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/images/diary/
     - assets/images/on_boarding/
     - assets/images/home_body_statistics/
     - assets/images/on_boarding_goals/
     - assets/images/navBar/
+    - assets/images/nutrition/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
