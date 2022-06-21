@@ -52,9 +52,9 @@ class _HomeScreenState extends State<HomeScreen> {
     num numCalories = 0;
     for (final intake in intakeResponse) {
       try {
-        final calorie = intake['food_data']['calorie'];
-        logger.log(numCalories.toString() + calorie.toString());
-        numCalories += double.parse(calorie);
+        final calorie =
+            double.parse(intake['food_data']['calorie']) * intake['amount'];
+        numCalories += calorie;
       } catch (e) {
         logger.log(e.toString());
       }
