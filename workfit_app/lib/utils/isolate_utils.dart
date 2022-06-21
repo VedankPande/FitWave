@@ -1,6 +1,10 @@
 import 'dart:isolate';
 import 'dart:developer';
+import 'dart:io' as io;
+
 import 'package:camera/camera.dart';
+import 'package:tflite_flutter/tflite_flutter.dart';
+import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 import 'package:workfit_app/tflite/movenet.dart';
 
 
@@ -25,6 +29,7 @@ class IsolateUtils{
   static void entryPoint(SendPort sendport) async {
     //new receive port inside spawned isolate to receive isolatedata (frames)
     final port = ReceivePort();
+    final movenet = Movenet()..loadModel();
 
     //send sendport of new receive port to class attribute (accessed from camera view using getter) 
     //to communicate with this isolate
@@ -34,6 +39,11 @@ class IsolateUtils{
     await for (final IsolateData isolateData in port){
       log(isolateData.toString());
       if (isolateData.responsePort!=null){
+
+        // Movenet movenet = Movenet(
+        //   interpreter: Interpreter.fromAddress(isolateData.interpreterAdd)
+        // );
+        //List<double> results = movenet.predict(io.File(isolateData.image)).getDoubleList();
         print("received isolate data: $isolateData");
         //run movenet here - send results back to ui isolate via isolatedata response port
         isolateData.responsePort!.send("message received");
@@ -46,7 +56,7 @@ class IsolateUtils{
 
 class IsolateData{
   CameraImage? image;
-  int? interpreterAdd;
+  int interpreterAdd;
   SendPort? responsePort;
 
   IsolateData(

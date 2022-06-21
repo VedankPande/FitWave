@@ -44,6 +44,7 @@ class _PostureWidgetState extends State<PostureWidget>
 
     // init camera
     print("intializing camera");
+    _movenet = Movenet();
     getCamera();
   }
 
@@ -93,7 +94,7 @@ class _PostureWidgetState extends State<PostureWidget>
       });
 
       //create isolate data using current image
-      var isolateData = IsolateData(image, _movenet?.interpreter!.address);
+      var isolateData = IsolateData(image, _movenet!.interpreter!.address);
       print("isolate data in posturewidget $isolateData");
       //run inference in new isolate and return results
       print("waiting for inference...");
