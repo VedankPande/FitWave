@@ -24,6 +24,10 @@ class _PostureWidgetState extends State<PostureWidget>
   bool predicting = false;
   Movenet? _movenet;
   IsolateUtils? _isolateUtils;
+  double randomInt = 0.1;
+  int fps = 0;
+  int currentTime = 0;
+  int currentFrames = 0;
 
   @override
   void initState() {
@@ -97,8 +101,12 @@ class _PostureWidgetState extends State<PostureWidget>
 
       log(results);
 
+      final double temp = math.Random().nextDouble();
+      log('random number generated $temp');
+
       setState(() {
         predicting = false;
+        randomInt = temp;
       });
     }
   }
@@ -138,6 +146,43 @@ class _PostureWidgetState extends State<PostureWidget>
     super.dispose();
   }
 
+  Widget funcitonRebuilt(screenSize) {
+    log('random number received $randomInt');
+    int newTime = ((new DateTime.now()).millisecondsSinceEpoch / 1000).round();
+    if (currentTime != newTime) {
+      fps = currentFrames;
+      currentFrames = 0;
+      currentTime = newTime;
+    } else {
+      currentFrames += 1;
+    }
+
+    return CustomPaint(
+      size: screenSize,
+      painter: MyPainter(
+        modelData: [
+          [0.49571934, 0.13109933, 0.49981618],
+          [0.48342878, 0.11880877, 0.8029834],
+          [0.4793319, 0.11880877, 0.75382113],
+          [0.45065394, 0.14748675, 0.49981618],
+          [0.45065394, 0.14748675, 0.70056206],
+          [0.45884764, 0.22942382, 0.84395194],
+          [0.44246024, 0.24990809, 0.84395194],
+          [0.6022375, 0.27039236, 0.8808236],
+          [0.5776564, 0.2949735, 0.6350124],
+          [0.72514313, 0.29907033, 0.84395194],
+          [0.70056206, 0.32774833, 0.8029834],
+          [0.49981618, 0.4629445, 0.84395194],
+          [0.49162248, 0.4711382, 0.75382113],
+          [0.58175325, 0.6309155, 0.84395194],
+          [0.5735596, 0.6350124, 0.8029834],
+          [0.64320606, 0.82756454, 0.925889],
+          [0.63910925, randomInt, 0.70056206],
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (controller == null || !controller!.value.isInitialized) {
@@ -152,42 +197,26 @@ class _PostureWidgetState extends State<PostureWidget>
     var previewW = math.min(screenSizeTemp.height, screenSizeTemp.width);
     var screenRatio = screenH / screenW;
     var previewRatio = previewH / previewW;
-
+    log('random number found $randomInt');
     return Stack(
       children: [
-        // OverflowBox(
-        //   maxHeight: screenRatio > previewRatio
-        //       ? screenH
-        //       : screenW / previewW * previewH,
-        //   maxWidth: screenRatio > previewRatio
-        //       ? screenH / previewH * previewW
-        //       : screenW,
-        //   child: CameraPreview(controller!),
-        // ),
-        CustomPaint(
-          size: screenSize,
-          painter: MyPainter(
-            modelData: [
-              [0.49571934, 0.13109933, 0.49981618],
-              [0.48342878, 0.11880877, 0.8029834],
-              [0.4793319, 0.11880877, 0.75382113],
-              [0.45065394, 0.14748675, 0.49981618],
-              [0.45065394, 0.14748675, 0.70056206],
-              [0.45884764, 0.22942382, 0.84395194],
-              [0.44246024, 0.24990809, 0.84395194],
-              [0.6022375, 0.27039236, 0.8808236],
-              [0.5776564, 0.2949735, 0.6350124],
-              [0.72514313, 0.29907033, 0.84395194],
-              [0.70056206, 0.32774833, 0.8029834],
-              [0.49981618, 0.4629445, 0.84395194],
-              [0.49162248, 0.4711382, 0.75382113],
-              [0.58175325, 0.6309155, 0.84395194],
-              [0.5735596, 0.6350124, 0.8029834],
-              [0.64320606, 0.82756454, 0.925889],
-              [0.63910925, 0.8234677, 0.70056206],
-            ],
-          ),
+        OverflowBox(
+          maxHeight: screenRatio > previewRatio
+              ? screenH
+              : screenW / previewW * previewH,
+          maxWidth: screenRatio > previewRatio
+              ? screenH / previewH * previewW
+              : screenW,
+          child: CameraPreview(controller!),
         ),
+        funcitonRebuilt(screenSize),
+        Text(
+          'Rendering FPS: ${fps}',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        )
       ],
     );
   }
@@ -200,7 +229,8 @@ class MyPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    log(size.toString());
+    log('random number received ${modelData[16][1]}');
+    log('yes');
     final paintGreen = Paint()
       ..color = Colors.green
       ..strokeWidth = 3;
@@ -311,6 +341,6 @@ class MyPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter old) {
-    return false;
+    return true;
   }
 }
