@@ -68,4 +68,4 @@ class ExerciseObjectView(APIView):
             ExerciseObject.objects.filter(id = id).delete()
             return JsonResponse({'status':200,'data':"deleted exercise object"})
         except Exception as e:
-            return JsonResponse({'status':400,'data':e})
+            return JsonResponse({'status':500,'data':e})
