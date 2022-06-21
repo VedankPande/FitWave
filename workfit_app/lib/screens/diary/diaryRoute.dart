@@ -4,7 +4,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:workfit_app/screens/diary/addFood.dart';
 import 'package:workfit_app/services/api.dart';
 import 'package:workfit_app/screens/workout/addNewSet/addNewSet.dart';
-import 'package:workfit_app/services/userdata.dart';
+import 'package:workfit_app/services/userData.dart';
 import 'package:workfit_app/widgets/caloriesGoalWidget.dart';
 import 'package:workfit_app/widgets/workoutWidget.dart';
 

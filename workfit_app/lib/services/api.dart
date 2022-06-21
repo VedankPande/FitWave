@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:workfit_app/services/userdata.dart';
+import 'package:workfit_app/services/userData.dart';
 
 class RestApi {
   final String uid = getUserData()['uid'];
@@ -50,7 +50,6 @@ class RestApi {
           return http.Response('Error', 408);
         },
       );
-      ;
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body)['data'];
         return data;

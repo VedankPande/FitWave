@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:workfit_app/services/userdata.dart';
+import 'package:workfit_app/services/userData.dart';
 
 class AuthenticationHelper {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -20,6 +20,7 @@ class AuthenticationHelper {
       }
       return false;
     } on FirebaseAuthException catch (e) {
+      log(e.toString());
       return false;
     }
   }
