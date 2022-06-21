@@ -39,7 +39,10 @@ class _PostureWidgetState extends State<PostureWidget> with WidgetsBindingObserv
 
     // init camera
     print("intializing camera");
+    _movenet = Movenet();
     getCamera();
+
+    
 
   }
 
@@ -82,6 +85,7 @@ class _PostureWidgetState extends State<PostureWidget> with WidgetsBindingObserv
 
   cameraControllerCallback(CameraImage image) async{
     print("in camera callback");
+    print(image.format.group);
     if (true){
       if (predicting){
         print("still predicting previous frame");
@@ -92,7 +96,7 @@ class _PostureWidgetState extends State<PostureWidget> with WidgetsBindingObserv
       });
 
       //create isolate data using current image
-      var isolateData = IsolateData(image, _movenet?.interpreter!.address);
+      var isolateData = IsolateData(image, _movenet!.interpreter!.address);
       print("isolate data in posturewidget $isolateData");
       //run inference in new isolate and return results
       print("waiting for inference...");
