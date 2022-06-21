@@ -49,12 +49,14 @@ class _WorkoutPostureScreenState extends State<WorkoutPostureScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            // Image.asset(
-            //   'assets/images/sample_exercise.png',
-            //   fit: BoxFit.cover,
-            //   height: MediaQuery.of(context).size.height,
-            //   width: MediaQuery.of(context).size.width,
-            // ),
+            Center(
+              child: Image.asset(
+                'assets/images/sample_exercise.jpeg',
+                fit: BoxFit.fill,
+                height: MediaQuery.of(context).size.height * 0.5,
+                width: MediaQuery.of(context).size.width,
+              ),
+            ),
             PostureWidget(),
             Positioned(
               top: 0,
