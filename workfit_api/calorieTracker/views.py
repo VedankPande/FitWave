@@ -41,8 +41,12 @@ class FoodObjectView(APIView):
             return JsonResponse({'status':500,'data':{}})
 
     #requires id
-    def delete(self,request):
-        pass
+    def delete(self,request,id):
+        try:
+            UserDailyIntake.objects.filter(id=id).delete()
+            return JsonResponse({'status':200,'data':'deleted userintake object'})
+        except Exception as e:
+            return JsonResponse({'status':500,'data':e})
 
 ##################################################################################################################################################################################
 
