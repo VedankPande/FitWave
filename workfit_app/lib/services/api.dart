@@ -11,15 +11,15 @@ class RestApi {
   getRequest(uri) async {
     try {
       final url = Uri.parse(uri);
-      var response = await http.get(url).timeout(
-        const Duration(seconds: 3),
+      final response = await http.get(url).timeout(
+        const Duration(seconds: 5),
         onTimeout: () {
           Fluttertoast.showToast(msg: 'Server Timeout');
           return http.Response('Error', 408);
         },
       );
       if (response.statusCode == 200) {
-        var data = jsonDecode(response.body)['data'];
+        final data = jsonDecode(response.body)['data'];
         return data;
       }
       log(response.toString());
@@ -37,21 +37,16 @@ class RestApi {
         'Content-Type': 'application/json',
       };
       log(body.toString());
-      var response = await http
-          .post(
-        url,
-        headers: header,
-        body: body,
-      )
-          .timeout(
-        const Duration(seconds: 3),
+      final response =
+          await http.post(url, headers: header, body: body).timeout(
+        const Duration(seconds: 5),
         onTimeout: () {
           Fluttertoast.showToast(msg: 'Server Timeout');
           return http.Response('Error', 408);
         },
       );
       if (response.statusCode == 200) {
-        var data = jsonDecode(response.body)['data'];
+        final data = jsonDecode(response.body)['data'];
         return data;
       }
       return null;
@@ -79,6 +74,12 @@ class RestApi {
 
   fetchFoods() async {
     final uri = '${domain}calorie-tracker/food/';
+    final data = await getRequest(uri);
+    return data ?? [];
+  }
+
+  fetchIntakes() async {
+    final uri = '${domain}calorie-tracker/food-object/$uid';
     final data = await getRequest(uri);
     return data ?? [];
   }

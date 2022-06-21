@@ -27,13 +27,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var workouts = getUserData()['workouts'];
+  num calories = 0;
   final String username = getUserData()['username'];
   String userInitials = '';
 
   @override
   void initState() {
     super.initState();
-    getWorkouts();
+    fetchUserData();
     final userFullName = getUserData()['fullName'].toString().split(' ');
     try {
       userInitials += userFullName[0][0].toUpperCase();
@@ -45,11 +46,25 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  getWorkouts() async {
-    var response = await RestApi().fetchWorkout();
+  fetchUserData() async {
+    final workoutResponse = await RestApi().fetchWorkout();
+    final intakeResponse = await RestApi().fetchIntakes();
+    num numCalories = 0;
+    for (final intake in intakeResponse) {
+      try {
+        final calorie = intake['food_data']['calorie'];
+        logger.log(numCalories.toString() + calorie.toString());
+        numCalories += double.parse(calorie);
+      } catch (e) {
+        logger.log(e.toString());
+      }
+    }
+    numCalories = int.parse(numCalories.toStringAsFixed(0));
     try {
+      logger.log(numCalories.toString());
       setState(() {
-        workouts = response ?? [];
+        workouts = workoutResponse ?? [];
+        calories = numCalories;
       });
     } catch (exc) {
       logger.log(exc.toString());
@@ -168,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       SizedBox(height: 25),
                       CaloriesGoalWidget(
-                        calorieConsumed: 1640,
+                        calorieConsumed: calories.toInt(),
                         calorieGoal: 2030,
                       ),
                       SizedBox(height: 25),

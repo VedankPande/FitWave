@@ -15,11 +15,18 @@ updateUserData(uid) async {
   final res = event.snapshot.value;
   userData = jsonDecode(jsonEncode(res));
   userData['uid'] = uid;
-  var workoutResponse = await RestApi().fetchWorkout();
+  final workoutResponse = await RestApi().fetchWorkout();
+  final intakeResponse = await RestApi().fetchIntakes();
+
   userData['workouts'] = workoutResponse ?? [];
+  userData['intakes'] = intakeResponse ?? [];
   log(userData['username'].toString());
 }
 
 updateWorkouts(data) {
   userData['workouts'] = data ?? [];
+}
+
+updateIntakes(data) {
+  userData['intakes'] = data ?? [];
 }
