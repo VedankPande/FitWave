@@ -42,6 +42,7 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
           food['carbohydrate'],
           food['protein'],
           food['fat'],
+          food['id'],
         ),
       );
     }
@@ -180,6 +181,7 @@ foodCard(
   carbs,
   protein,
   fat,
+  id,
 ) {
   return TextButton(
     onPressed: () {
@@ -195,6 +197,7 @@ foodCard(
             carbs: carbs,
             protein: protein,
             fat: fat,
+            id: id,
           ),
         ),
       );

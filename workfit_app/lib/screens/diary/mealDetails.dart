@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart ';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:workfit_app/screens/home.dart';
+import 'package:workfit_app/services/api.dart';
+import 'package:workfit_app/services/authentication.dart';
+import 'package:workfit_app/services/userData.dart';
 import 'package:workfit_app/widgets/coloredButton.dart';
 
 class MealDetailsScreen extends StatefulWidget {
@@ -10,6 +15,7 @@ class MealDetailsScreen extends StatefulWidget {
   final String carbs;
   final String protein;
   final String fat;
+  final int id;
   const MealDetailsScreen({
     Key? key,
     required this.meal,
@@ -18,6 +24,7 @@ class MealDetailsScreen extends StatefulWidget {
     required this.carbs,
     required this.protein,
     required this.fat,
+    required this.id,
   }) : super(key: key);
 
   @override
@@ -274,8 +281,35 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
               ),
               ColoredButton(
                 buttonText: 'Confirm food',
-                onPressed: () {
-                  null;
+                onPressed: () async {
+                  ['Breakfast', 'Lunch', 'Dinner', 'Snacks'];
+                  String meal = '';
+                  if (mealDropdownValue == 'Breakfast') {
+                    meal = 'BR';
+                  } else if (mealDropdownValue == 'Lunch') {
+                    meal = 'LU';
+                  } else if (mealDropdownValue == 'Dinner') {
+                    meal = 'DI';
+                  } else {
+                    meal = 'SN';
+                  }
+                  await RestApi().postMeal(
+                    widget.id,
+                    int.parse(servingsDropdownValue),
+                    meal,
+                  );
+                  final data = await RestApi().fetchIntakes();
+                  await updateIntakes(data);
+
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    PageTransition(
+                      duration: const Duration(microseconds: 500),
+                      type: PageTransitionType.fade,
+                      child: Home(currentIndex: 1),
+                    ),
+                    (route) => false,
+                  );
                 },
               ),
             ],

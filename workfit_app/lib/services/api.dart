@@ -105,4 +105,16 @@ class RestApi {
     final data = await postRequest(uri, body);
     return data ?? [];
   }
+
+  postMeal(id, amount, meal) async {
+    final uri = '${domain}calorie-tracker/food-object/';
+    final body = jsonEncode(<String, dynamic>{
+      'user': uid,
+      'id': id,
+      'amount': amount,
+      'meal': meal,
+    });
+    final data = await postRequest(uri, body);
+    return data ?? [];
+  }
 }
