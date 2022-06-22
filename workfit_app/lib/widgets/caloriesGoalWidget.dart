@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
@@ -14,8 +16,19 @@ class CaloriesGoalWidget extends StatefulWidget {
 }
 
 class _CaloriesGoalWidgetState extends State<CaloriesGoalWidget> {
+  late ValueNotifier<double> valueNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    valueNotifier = ValueNotifier(0.0);
+  }
+
   @override
   Widget build(BuildContext context) {
+    valueNotifier.value = double.parse(
+      ((widget.calorieConsumed / widget.calorieGoal) * 100).toStringAsFixed(0),
+    );
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
@@ -91,7 +104,7 @@ class _CaloriesGoalWidgetState extends State<CaloriesGoalWidget> {
                 backColor: Color(0xffD6D6D6),
                 animationDuration: 2,
                 mergeMode: true,
-                valueNotifier: ValueNotifier(85),
+                valueNotifier: valueNotifier,
               ),
               Container(
                 width: 110,
@@ -145,5 +158,11 @@ class _CaloriesGoalWidgetState extends State<CaloriesGoalWidget> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    valueNotifier.dispose();
+    super.dispose();
   }
 }

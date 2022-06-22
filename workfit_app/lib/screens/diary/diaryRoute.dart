@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:page_transition/page_transition.dart';
@@ -16,6 +18,72 @@ class DiaryScreen extends StatefulWidget {
 }
 
 class _DiaryScreenState extends State<DiaryScreen> {
+  num calories = 0;
+  var intakeList = [];
+  var breakfastList = [];
+  var lunchList = [];
+  var dinnerList = [];
+  var snacksList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    intakeList = getUserData()['intakes'];
+    fetchUserData();
+    calculateMealData(intakeList);
+  }
+
+  fetchUserData() async {
+    final intakeResponse = await RestApi().fetchIntakes();
+    calculateMealData(intakeResponse);
+  }
+
+  calculateMealData(intakeResponse) {
+    log(intakeResponse.length.toString());
+    num numCalories = 0;
+    List breakfastResponse = [];
+    List lunchResponse = [];
+    List dinnerResponse = [];
+    List snacksResponse = [];
+    for (final intake in intakeResponse) {
+      try {
+        final calorie =
+            double.parse(intake['food_data']['calorie']) * intake['amount'];
+        numCalories += calorie;
+      } catch (e) {
+        log(e.toString());
+      }
+      try {
+        final category = intake['meal'];
+        if (category == 'BR') {
+          breakfastResponse.add(intake);
+        } else if (category == 'LU') {
+          lunchResponse.add(intake);
+        } else if (category == 'DI') {
+          dinnerResponse.add(intake);
+        } else if (category == 'SN') {
+          snacksResponse.add(intake);
+        }
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+    numCalories = int.parse(numCalories.toStringAsFixed(0));
+    try {
+      intakeList = intakeResponse;
+      setState(() {
+        calories = numCalories;
+        breakfastList = breakfastResponse;
+        lunchList = lunchResponse;
+        dinnerList = dinnerResponse;
+        snacksList = snacksResponse;
+      });
+    } catch (exc) {
+      log(exc.toString());
+    }
+    log('end ${intakeResponse.length.toString()}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,7 +163,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                           vertical: 20,
                         ),
                         child: CaloriesGoalWidget(
-                          calorieConsumed: 1640,
+                          calorieConsumed: calories.toInt(),
                           calorieGoal: 2030,
                         ),
                       ),
@@ -103,21 +171,25 @@ class _DiaryScreenState extends State<DiaryScreen> {
                         context,
                         'assets/images/diary/breakfast.png',
                         "Breakfast",
+                        breakfastList,
                       ),
                       diaryCard(
                         context,
                         'assets/images/diary/lunch.png',
                         "Lunch",
+                        lunchList,
                       ),
                       diaryCard(
                         context,
                         'assets/images/diary/dinner.png',
                         "Dinner",
+                        dinnerList,
                       ),
                       diaryCard(
                         context,
                         'assets/images/diary/snacks.png',
                         "Snacks",
+                        snacksList,
                       ),
                     ],
                   ),
@@ -131,7 +203,78 @@ class _DiaryScreenState extends State<DiaryScreen> {
   }
 }
 
-diaryCard(BuildContext context, icon, title) {
+buildIntakeMeals(context, List children) {
+  List<Widget> listWidgets = [];
+
+  if (children.length != 0) {
+    listWidgets.add(
+      Container(
+        height: 1,
+        width: MediaQuery.of(context).size.width,
+        color: Color(0xffF0F0F0),
+      ),
+    );
+  }
+
+  for (final child in children) {
+    listWidgets.add(Container(
+      width: MediaQuery.of(context).size.width,
+      color: Color(0xfff8f8f8),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  child['food_data']['name'],
+                  style: TextStyle(
+                    color: Color(0xff757575),
+                    fontSize: 14,
+                    fontFamily: "Avenir",
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                SizedBox(width: 8),
+                Text(
+                  "${double.parse(child['food_data']['calorie']).toStringAsFixed(0)} Kcal",
+                  style: TextStyle(
+                    color: Color(0xff757575),
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            "${child['amount']} serving",
+            style: TextStyle(
+              color: Color(0xff757575),
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
+    ));
+  }
+
+  return listWidgets;
+}
+
+diaryCard(
+  BuildContext context,
+  String icon,
+  String title,
+  List children,
+) {
   return Container(
     width: MediaQuery.of(context).size.width,
     color: Color(0xfff8f8f8),
@@ -165,6 +308,9 @@ diaryCard(BuildContext context, icon, title) {
               ),
             ],
           ),
+        ),
+        Column(
+          children: buildIntakeMeals(context, children),
         ),
         Container(
           height: 1,

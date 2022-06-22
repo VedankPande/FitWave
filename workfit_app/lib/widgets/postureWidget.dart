@@ -8,7 +8,6 @@ import 'package:workfit_app/tflite/movenet.dart';
 import 'package:workfit_app/utils/isolate_utils.dart';
 import 'dart:math' as math;
 
-
 class PostureWidget extends StatefulWidget {
   const PostureWidget({Key? key}) : super(key: key);
 
@@ -24,10 +23,10 @@ class _PostureWidgetState extends State<PostureWidget>
   Movenet? _movenet;
   IsolateUtils? _isolateUtils;
   late final Function(TensorBuffer recognitions) resultsCallback;
-  double randomInt = 0.1;
   int fps = 0;
   int currentTime = 0;
   int currentFrames = 0;
+  List<List<double>> modelResponse = [];
 
   @override
   void initState() {
@@ -43,8 +42,7 @@ class _PostureWidgetState extends State<PostureWidget>
     await _isolateUtils?.start();
 
     // init camera
-    
-    
+
     print("intializing camera");
     getCamera();
   }
@@ -97,26 +95,33 @@ class _PostureWidgetState extends State<PostureWidget>
       //create isolate data using current image
       var isolateData = IsolateData(image, _movenet!.interpreter!.address);
       print("created new isolateData");
-      
 
       //print("isolate data in posturewidget $isolateData");
       //run inference in new isolate and return results
       print("waiting for inference...");
-      String results = await inference(isolateData);
+      TensorBuffer results = await inference(isolateData);
+      final List<double> listResult = results.getDoubleList();
+      // log('response rec ${listResult.length.toString()}');
+      List<List<double>> formattedResult = [];
+      for (int i = 0; i <= listResult.length - 3; i += 3) {
+        // log('formatted result $i');
+        formattedResult
+            .add([listResult[i], listResult[i + 1], listResult[i + 2]]);
+      }
 
-      log(results);
-
-      final double temp = math.Random().nextDouble();
-      log('random number generated $temp');
-
-      setState(() {
-        predicting = false;
-        randomInt = temp;
-      });
+      log('formatted result ${formattedResult.toString()}');
+      try {
+        setState(() {
+          predicting = false;
+          modelResponse = formattedResult;
+        });
+      } catch (e) {
+        log(e.toString());
+      }
     }
   }
 
-  Future<String> inference(IsolateData isolateData) async {
+  Future<TensorBuffer> inference(IsolateData isolateData) async {
     ReceivePort receivePort = ReceivePort();
     _isolateUtils?.sendPort
         ?.send(isolateData..responsePort = receivePort.sendPort);
@@ -152,7 +157,6 @@ class _PostureWidgetState extends State<PostureWidget>
   }
 
   Widget funcitonRebuilt(screenSize) {
-    log('random number received $randomInt');
     int newTime = ((new DateTime.now()).millisecondsSinceEpoch / 1000).round();
     if (currentTime != newTime) {
       fps = currentFrames;
@@ -165,25 +169,7 @@ class _PostureWidgetState extends State<PostureWidget>
     return CustomPaint(
       size: screenSize,
       painter: MyPainter(
-        modelData: [
-          [0.49571934, 0.13109933, 0.49981618],
-          [0.48342878, 0.11880877, 0.8029834],
-          [0.4793319, 0.11880877, 0.75382113],
-          [0.45065394, 0.14748675, 0.49981618],
-          [0.45065394, 0.14748675, 0.70056206],
-          [0.45884764, 0.22942382, 0.84395194],
-          [0.44246024, 0.24990809, 0.84395194],
-          [0.6022375, 0.27039236, 0.8808236],
-          [0.5776564, 0.2949735, 0.6350124],
-          [0.72514313, 0.29907033, 0.84395194],
-          [0.70056206, 0.32774833, 0.8029834],
-          [0.49981618, 0.4629445, 0.84395194],
-          [0.49162248, 0.4711382, 0.75382113],
-          [0.58175325, 0.6309155, 0.84395194],
-          [0.5735596, 0.6350124, 0.8029834],
-          [0.64320606, 0.82756454, 0.925889],
-          [0.63910925, randomInt, 0.70056206],
-        ],
+        modelData: modelResponse,
       ),
     );
   }
@@ -202,7 +188,6 @@ class _PostureWidgetState extends State<PostureWidget>
     var previewW = math.min(screenSizeTemp.height, screenSizeTemp.width);
     var screenRatio = screenH / screenW;
     var previewRatio = previewH / previewW;
-    log('random number found $randomInt');
     return Stack(
       children: [
         OverflowBox(
@@ -234,8 +219,6 @@ class MyPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    log('random number received ${modelData[16][1]}');
-    log('yes');
     final paintGreen = Paint()
       ..color = Colors.green
       ..strokeWidth = 3;
