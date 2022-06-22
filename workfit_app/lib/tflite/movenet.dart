@@ -1,17 +1,19 @@
 import 'dart:math';
 import 'dart:io' as io;
 
+import 'package:flutter/cupertino.dart';
+import 'package:image/image.dart' as image_lib;
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 
 
 class Movenet{
 
-  Interpreter? interpreter;
+  Interpreter? _interpreter;
 
   final InterpreterOptions _interpreterOptions = InterpreterOptions()..useNnApiForAndroid =true;
   
-  static const String modelName = 'lite-model_movenet_singlepose_lightning_tflite_int8_4.tflite';
+  static const String modelName = 'lite-model_movenet_singlepose_lightning_tflite_float16_4.tflite';
   
   late List<int> _inputShape;
   late TfLiteType _inputType;
@@ -23,12 +25,13 @@ class Movenet{
 
 
   Movenet({Interpreter? interpreter}){
-    loadModel();
+    loadModel(interpreter: interpreter);
   }
   
   // load the specified model and get input/output tensor information
   void loadModel({Interpreter? interpreter}) async {
-    interpreter =  interpreter ?? await Interpreter.fromAsset(modelName, options: _interpreterOptions);
+
+    _interpreter =  interpreter ?? await Interpreter.fromAsset(modelName, options: _interpreterOptions);
     print("model successfully loaded");
     if (interpreter != null){
       var outputTensor = interpreter.getOutputTensor(0);
@@ -42,12 +45,16 @@ class Movenet{
     
   }
 
-  TensorBuffer predict(io.File image){
+  TensorBuffer predict(image_lib.Image image){
     print("start predicting");
     final initial = DateTime.now().millisecondsSinceEpoch;
     _inputImage = TensorImage(_inputType);
-    _inputImage = TensorImage.fromFile(image);
+    _inputImage.loadImage(image);
     _inputImage = processImage();
+    print("processed image info");
+    print(_inputImage.dataType);
+    print(_inputImage.buffer.asFloat32List());
+    print(_inputImage.image);
     final post_process = DateTime.now().millisecondsSinceEpoch - initial;
 
     print('Time to load image: $post_process ms');
@@ -60,7 +67,6 @@ class Movenet{
 
       print('Time to get predictions: $run_post ms');
 
-      print(_outputBuffer.getDoubleList().shape);
       return _outputBuffer;
     }
     catch (err){
@@ -81,5 +87,5 @@ class Movenet{
     return _imageProcessor!.process(_inputImage);
   }
 
-  
+  Interpreter? get interpreter => _interpreter;
 }

@@ -3,12 +3,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:tflite/tflite.dart';
+import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 import 'package:workfit_app/tflite/movenet.dart';
 import 'package:workfit_app/utils/isolate_utils.dart';
 import 'dart:math' as math;
 
-import 'package:workfit_app/widgets/image_selector.dart';
 
 class PostureWidget extends StatefulWidget {
   const PostureWidget({Key? key}) : super(key: key);
@@ -24,6 +23,7 @@ class _PostureWidgetState extends State<PostureWidget>
   bool predicting = false;
   Movenet? _movenet;
   IsolateUtils? _isolateUtils;
+  late final Function(TensorBuffer recognitions) resultsCallback;
   double randomInt = 0.1;
   int fps = 0;
   int currentTime = 0;
@@ -37,14 +37,15 @@ class _PostureWidgetState extends State<PostureWidget>
 
   void initStateMethod() async {
     WidgetsBinding.instance?.addObserver(this);
-
+    _movenet = Movenet();
     //spawn new isolate
     _isolateUtils = IsolateUtils();
     await _isolateUtils?.start();
 
     // init camera
+    
+    
     print("intializing camera");
-    _movenet = Movenet();
     getCamera();
   }
 
@@ -95,7 +96,10 @@ class _PostureWidgetState extends State<PostureWidget>
 
       //create isolate data using current image
       var isolateData = IsolateData(image, _movenet!.interpreter!.address);
-      print("isolate data in posturewidget $isolateData");
+      print("created new isolateData");
+      
+
+      //print("isolate data in posturewidget $isolateData");
       //run inference in new isolate and return results
       print("waiting for inference...");
       String results = await inference(isolateData);
@@ -240,7 +244,7 @@ class MyPainter extends CustomPainter {
       ..strokeWidth = 3;
 
     drawLine(p1, p2, {isPostureCorrect = true}) {
-      log(p1.toString() + p2.toString());
+      //log(p1.toString() + p2.toString());
       canvas.drawLine(
         p1 ?? const Offset(1, 1),
         p2 ?? const Offset(1, 1),
