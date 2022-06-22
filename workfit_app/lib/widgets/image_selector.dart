@@ -41,7 +41,7 @@ class _ImageSelectorState extends State<ImageSelector> {
     if (image == null) return;
     print("getting predictions...");
     try{
-      var movenet_output = _movenet.predict(io.File(image.path));
+      //var movenet_output = _movenet.predict(io.File(image.path));
     }
     //Image.file(io.File(image.path))
     catch(e){
