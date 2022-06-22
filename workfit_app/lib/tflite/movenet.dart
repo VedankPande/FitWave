@@ -56,7 +56,6 @@ class Movenet{
     print(_inputImage.buffer.asFloat32List());
     print(_inputImage.image);
     final post_process = DateTime.now().millisecondsSinceEpoch - initial;
-
     print('Time to load image: $post_process ms');
 
     
