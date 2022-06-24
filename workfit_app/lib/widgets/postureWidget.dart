@@ -26,7 +26,7 @@ class _PostureWidgetState extends State<PostureWidget>
   int fps = 0;
   int currentTime = 0;
   int currentFrames = 0;
-  List<List<double>> modelResponse = [];
+  List<dynamic> modelResponse = [];
 
   @override
   void initState() {
@@ -99,21 +99,20 @@ class _PostureWidgetState extends State<PostureWidget>
       //print("isolate data in posturewidget $isolateData");
       //run inference in new isolate and return results
       print("waiting for inference...");
-      TensorBuffer results = await inference(isolateData);
-      final List<double> listResult = results.getDoubleList();
+      List<dynamic> results = await inference(isolateData);
       // log('response rec ${listResult.length.toString()}');
-      List<List<double>> formattedResult = [];
-      for (int i = 0; i <= listResult.length - 3; i += 3) {
-        // log('formatted result $i');
-        formattedResult
-            .add([listResult[i], listResult[i + 1], listResult[i + 2]]);
-      }
+      // List<List<double>> formattedResult = [];
+      // for (int i = 0; i <= results.length - 3; i += 3) {
+      //   // log('formatted result $i');
+      //   formattedResult
+      //       .add([results[i+1], results[i], results[i + 2]]);
+      // }
 
-      log('formatted result ${formattedResult.toString()}');
+      log('results ${results.toString()}');
       try {
         setState(() {
           predicting = false;
-          modelResponse = formattedResult;
+          modelResponse = results;
         });
       } catch (e) {
         log(e.toString());
@@ -121,7 +120,7 @@ class _PostureWidgetState extends State<PostureWidget>
     }
   }
 
-  Future<TensorBuffer> inference(IsolateData isolateData) async {
+  Future<List<dynamic>> inference(IsolateData isolateData) async {
     ReceivePort receivePort = ReceivePort();
     _isolateUtils?.sendPort
         ?.send(isolateData..responsePort = receivePort.sendPort);

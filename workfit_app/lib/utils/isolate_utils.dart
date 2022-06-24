@@ -45,7 +45,8 @@ class IsolateUtils {
         image_lib.Image image =
             ImageUtils.convertCameraImage(isolateData.image!)!;
         if (io.Platform.isAndroid) {
-          image = image_lib.copyRotate(image, 90);
+          image = image_lib.copyRotate(image, 270);
+          image = image_lib.flipHorizontal(image);
         }
         log("running movenet in isolate");
         TensorBuffer results = movenet.predict(image);

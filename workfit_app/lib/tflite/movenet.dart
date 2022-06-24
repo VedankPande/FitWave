@@ -21,6 +21,8 @@ class Movenet {
   late TensorBuffer _outputBuffer;
   late TensorImage _inputImage;
   ImageProcessor? _imageProcessor = null;
+  late List<Object> inputs;
+  TensorBuffer outputLocations = TensorBufferFloat([]);
 
   Movenet({Interpreter? interpreter}) {
     loadModel(interpreter: interpreter);
@@ -39,19 +41,17 @@ class Movenet {
       _outputShape = outputTensor.shape;
       _outputType = outputTensor.type;
       _outputBuffer = TensorBuffer.createFixedSize(_outputShape, _outputType);
+      outputLocations = TensorBufferFloat([1,1,17,3]);
     }
   }
 
-  TensorBuffer predict(image_lib.Image image) {
+  dynamic predict(image_lib.Image image) {
     print("start predicting");
     final initial = DateTime.now().millisecondsSinceEpoch;
     _inputImage = TensorImage(_inputType);
     _inputImage.loadImage(image);
     _inputImage = processImage();
-    print("processed image info");
-    print(_inputImage.dataType);
-    print(_inputImage.buffer.asFloat32List());
-    print(_inputImage.image);
+    inputs = [_inputImage.buffer];
     final post_process = DateTime.now().millisecondsSinceEpoch - initial;
     print('Time to load image: $post_process ms');
 
@@ -62,11 +62,46 @@ class Movenet {
 
       print('Time to get predictions: $run_post ms');
 
-      return _outputBuffer;
+      print("running test output for multiple");
+      Map<int, Object> outputs = {0: outputLocations.buffer};
+      interpreter?.runForMultipleInputs(inputs, outputs);
+
+      print("getting parsed landmark data");
+      List<dynamic> new_res = parseLandmarkData();
+      print(new_res);
+      printWrapped(new_res.toString());
+
+      return new_res;
     } catch (err) {
       print(err);
-      return _outputBuffer;
+      return [];
     }
+  }
+  
+  void printWrapped(String text) {
+    final pattern = new RegExp('.{1,800}'); // 800 is the size of each chunk
+    pattern.allMatches(text).forEach((match) => print(match.group(0)));
+  }
+
+  parseLandmarkData() {
+    List outputParsed = [];
+    List<double> data = outputLocations.getDoubleList();
+    List result = [];
+    var x, y, c;
+
+    for (var i = 0; i < 51; i += 3) {
+      y = (data[0 + i] * 720).toInt();
+      x = (data[1 + i] * 480).toInt();
+      c = (data[2 + i]);
+      result.add([x, y, c]);
+    }
+    outputParsed = result;
+
+    // print("\n");
+    // printWrapped(outputParsed.toString());
+    // print("\n");
+
+    return result;
   }
 
   TensorImage processImage() {
@@ -74,11 +109,10 @@ class Movenet {
     int cropSize = max(_inputImage.height, _inputImage.width);
     _imageProcessor ??= ImageProcessorBuilder()
         .add(ResizeWithCropOrPadOp(cropSize, cropSize))
-        .add(ResizeOp(
-            _inputShape[1], _inputShape[2], ResizeMethod.NEAREST_NEIGHBOUR))
-        .add(NormalizeOp(127.5, 127.5))
+        .add(ResizeOp(_inputShape[1], _inputShape[2], ResizeMethod.BILINEAR))
         .build();
-    return _imageProcessor!.process(_inputImage);
+    _inputImage =  _imageProcessor!.process(_inputImage);
+    return _inputImage;
   }
 
   Interpreter? get interpreter => _interpreter;
