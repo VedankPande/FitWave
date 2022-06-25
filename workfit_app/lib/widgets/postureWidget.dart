@@ -67,7 +67,7 @@ class _PostureWidgetState extends State<PostureWidget>
       log('No camera is found');
     } else {
       // ignore: unnecessary_new
-      controller = new CameraController(cameras![1], ResolutionPreset.medium,
+      controller = new CameraController(cameras![0], ResolutionPreset.medium,
           enableAudio: false);
       controller?.initialize().then((_) {
         if (!mounted) {
@@ -238,8 +238,8 @@ class MyPainter extends CustomPainter {
     for (final data in modelData) {
       listData.add(
         Offset(
-          data[1] * size.width,
-          data[0] * size.height,
+          data[0] * size.width,
+          (1 - data[1]) * size.height,
         ),
       );
     }
