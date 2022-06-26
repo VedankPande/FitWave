@@ -238,8 +238,8 @@ class MyPainter extends CustomPainter {
     for (final data in modelData) {
       listData.add(
         Offset(
-          data[1] * size.width,
-          data[0] * size.height,
+          data[0] * size.width,
+          (1 - data[1]) * size.height,
         ),
       );
     }

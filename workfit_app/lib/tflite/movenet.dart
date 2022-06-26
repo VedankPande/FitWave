@@ -10,9 +10,10 @@ class Movenet {
   Interpreter? _interpreter;
 
   final InterpreterOptions _interpreterOptions = InterpreterOptions()
+    ..threads = 4
     ..useNnApiForAndroid = true;
   static const String modelName =
-      'lite-model_movenet_singlepose_lightning_3.tflite';
+      'lite-model_movenet_singlepose_thunder_3.tflite';
 
   late List<int> _inputShape;
   late TfLiteType _inputType;
@@ -41,7 +42,7 @@ class Movenet {
       _outputShape = outputTensor.shape;
       _outputType = outputTensor.type;
       _outputBuffer = TensorBuffer.createFixedSize(_outputShape, _outputType);
-      outputLocations = TensorBufferFloat([1,1,17,3]);
+      outputLocations = TensorBufferFloat([1, 1, 17, 3]);
     }
   }
 
@@ -77,7 +78,7 @@ class Movenet {
       return [];
     }
   }
-  
+
   void printWrapped(String text) {
     final pattern = new RegExp('.{1,800}'); // 800 is the size of each chunk
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
@@ -90,8 +91,8 @@ class Movenet {
     var x, y, c;
 
     for (var i = 0; i < 51; i += 3) {
-      y = (data[0 + i] * 720).toInt();
-      x = (data[1 + i] * 480).toInt();
+      y = (data[0 + i]);
+      x = (data[1 + i]);
       c = (data[2 + i]);
       result.add([x, y, c]);
     }
@@ -111,7 +112,7 @@ class Movenet {
         .add(ResizeWithCropOrPadOp(cropSize, cropSize))
         .add(ResizeOp(_inputShape[1], _inputShape[2], ResizeMethod.BILINEAR))
         .build();
-    _inputImage =  _imageProcessor!.process(_inputImage);
+    _inputImage = _imageProcessor!.process(_inputImage);
     return _inputImage;
   }
 
