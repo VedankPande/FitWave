@@ -239,10 +239,11 @@ class MyPainter extends CustomPainter {
       listData.add(
         Offset(
           data[0] * size.width,
-          (1 - data[1]) * size.height,
+          data[1] * size.height,
         ),
       );
     }
+    log(listData.toString());
 
     final KEYPOINT_DICT = {
       'nose': listData[0],

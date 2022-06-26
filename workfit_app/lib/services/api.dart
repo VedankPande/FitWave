@@ -6,7 +6,7 @@ import 'package:workfit_app/services/userData.dart';
 
 class RestApi {
   final String uid = getUserData()['uid'];
-  final String domain = 'http://192.168.29.230:80/';
+  final String domain = 'http://192.168.1.40:8000/';
 
   getRequest(uri) async {
     try {

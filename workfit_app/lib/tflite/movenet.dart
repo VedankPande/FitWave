@@ -10,10 +10,9 @@ class Movenet {
   Interpreter? _interpreter;
 
   final InterpreterOptions _interpreterOptions = InterpreterOptions()
-    ..threads = 4
     ..useNnApiForAndroid = true;
   static const String modelName =
-      'lite-model_movenet_singlepose_thunder_3.tflite';
+      'lite-model_movenet_singlepose_lightning_tflite_int8_4.tflite';
 
   late List<int> _inputShape;
   late TfLiteType _inputType;
