@@ -49,7 +49,7 @@ class IsolateUtils {
           image = image_lib.flipHorizontal(image);
         }
         log("running movenet in isolate");
-        TensorBuffer results = movenet.predict(image);
+        List<dynamic> results = movenet.predict(image);
         //run movenet here - send results back to ui isolate via isolatedata response port
         isolateData.responsePort!.send(results);
       }

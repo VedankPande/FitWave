@@ -67,7 +67,7 @@ class _PostureWidgetState extends State<PostureWidget>
       log('No camera is found');
     } else {
       // ignore: unnecessary_new
-      controller = new CameraController(cameras![1], ResolutionPreset.medium,
+      controller = new CameraController(cameras![1], ResolutionPreset.high,
           enableAudio: false);
       controller?.initialize().then((_) {
         if (!mounted) {
