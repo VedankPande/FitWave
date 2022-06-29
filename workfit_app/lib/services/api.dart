@@ -91,6 +91,7 @@ class RestApi {
       'name': workoutName.toString(),
     });
     final data = await postRequest(uri, body);
+    await RestApi().fetchWorkout();
     return data ?? [];
   }
 
@@ -103,6 +104,7 @@ class RestApi {
       'exercise_id': exerciseId.toString(),
     });
     final data = await postRequest(uri, body);
+    await RestApi().fetchWorkout();
     return data ?? [];
   }
 
