@@ -110,6 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<QudsPopupMenuBase> getMenuItems() {
     return [
+      // QudsPopupMenuDivider(),
       QudsPopupMenuItem(
         title: Text(
           'Logout',
@@ -122,39 +123,6 @@ class _HomeScreenState extends State<HomeScreen> {
               duration: const Duration(microseconds: 500),
               type: PageTransitionType.fade,
               child: OnBoarding(),
-            ),
-            (route) => false,
-          );
-        },
-      ),
-      QudsPopupMenuDivider(),
-      QudsPopupMenuItem(
-        title: Text(
-          'posture detection',
-        ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            PageTransition(
-              duration: const Duration(microseconds: 500),
-              type: PageTransitionType.fade,
-              child: WorkoutPostureScreen(),
-            ),
-          );
-        },
-      ),
-      QudsPopupMenuDivider(),
-      QudsPopupMenuItem(
-        title: Text(
-          'tflite',
-        ),
-        onPressed: () {
-          Navigator.pushAndRemoveUntil(
-            context,
-            PageTransition(
-              duration: const Duration(microseconds: 500),
-              type: PageTransitionType.fade,
-              child: ImageSelector(),
             ),
             (route) => false,
           );
