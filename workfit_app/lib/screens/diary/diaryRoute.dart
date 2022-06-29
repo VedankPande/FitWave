@@ -129,7 +129,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                           ),
                         ),
                         Text(
-                          "May 9, 2022",
+                          "July 1, 2022",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Color(0xff757575),
@@ -153,7 +153,8 @@ class _DiaryScreenState extends State<DiaryScreen> {
                 ),
               ),
               Container(
-                height: 598,
+                height: MediaQuery.of(context).size.height * 0.775,
+                width: MediaQuery.of(context).size.width,
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
