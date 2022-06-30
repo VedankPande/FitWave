@@ -43,31 +43,21 @@ shoulder_press(keypoints) {
 }
 
 plank(keypoints) {
-  var left_hip = [keypoints['left_hip'][0], keypoints['left_hip'][1]];
   var left_shoulder = [
     keypoints['left_shoulder'][0],
     keypoints['left_shoulder'][1]
   ];
-  var elbow = [keypoints['left_elbow'][0], keypoints['left_elbow'][1]];
-  var left_knee = [keypoints['left_knee'][0], keypoints['left_knee'][1]];
-  var left_eye = [keypoints['left_eye'][0], keypoints['left_eye'][1]];
   var right_shoulder = [
     keypoints['right_shoulder'][0],
     keypoints['right_shoulder'][1]
   ];
-  var right_eye = [keypoints['right_eye'][0], keypoints['right_eye'][1]];
+  var left_hip = [keypoints['left_hip'][0], keypoints['left_hip'][1]];
   var right_hip = [keypoints['right_hip'][0], keypoints['right_hip'][1]];
+  var left_knee = [keypoints['left_knee'][0], keypoints['left_knee'][1]];
   var right_knee = [keypoints['right_knee'][0], keypoints['right_knee'][1]];
-
-  var forehead = calculateMidpoint(left_eye, right_eye);
-  var upper_back = calculateMidpoint(left_shoulder, right_shoulder);
-  var waist = calculateMidpoint(left_hip, right_hip);
-  var middle_knee = calculateMidpoint(left_knee, right_knee);
-
-  var upper_angle = calculateAngle(forehead, upper_back, waist);
-  var lower_angle = calculateAngle(upper_back, waist, middle_knee);
-
-  if (upper_angle < 150 || lower_angle < 150) {
+  var lower_angle_right = calculateAngle(right_shoulder, right_hip, right_knee);
+  var lower_angle_left = calculateAngle(left_shoulder, left_hip, left_knee);
+  if (lower_angle_right < 170 || lower_angle_left < 170) {
     return false;
   } else {
     return true;

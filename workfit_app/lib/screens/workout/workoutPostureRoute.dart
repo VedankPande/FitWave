@@ -102,7 +102,9 @@ class _WorkoutPostureScreenState extends State<WorkoutPostureScreen> {
             //     width: MediaQuery.of(context).size.width,
             //   ),
             // ),
-            PostureWidget(),
+            PostureWidget(
+              widget.exercises[0]['exercise_data']['name'].toString(),
+            ),
             Positioned(
               top: 0,
               right: 0,

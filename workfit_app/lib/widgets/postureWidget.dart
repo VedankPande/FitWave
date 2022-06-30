@@ -10,7 +10,8 @@ import 'package:workfit_app/utils/isolate_utils.dart';
 import 'dart:math' as math;
 
 class PostureWidget extends StatefulWidget {
-  const PostureWidget({Key? key}) : super(key: key);
+  final String exerciseName;
+  const PostureWidget(this.exerciseName, {Key? key}) : super(key: key);
 
   @override
   State<PostureWidget> createState() => _PostureWidgetState();
@@ -156,7 +157,7 @@ class _PostureWidgetState extends State<PostureWidget>
     super.dispose();
   }
 
-  Widget funcitonRebuilt(screenSize) {
+  Widget funcitonRebuilt(screenSize, exerciseName) {
     int newTime = ((new DateTime.now()).millisecondsSinceEpoch / 1000).round();
     if (currentTime != newTime) {
       fps = currentFrames;
@@ -170,6 +171,7 @@ class _PostureWidgetState extends State<PostureWidget>
       size: screenSize,
       painter: MyPainter(
         modelData: modelResponse,
+        exerciseName: exerciseName,
       ),
     );
   }
@@ -199,7 +201,10 @@ class _PostureWidgetState extends State<PostureWidget>
               : screenW,
           child: CameraPreview(controller!),
         ),
-        funcitonRebuilt(screenSize),
+        funcitonRebuilt(
+          screenSize,
+          widget.exerciseName,
+        ),
         Text(
           'Rendering FPS: ${fps}',
           style: TextStyle(
@@ -215,7 +220,8 @@ class _PostureWidgetState extends State<PostureWidget>
 class MyPainter extends CustomPainter {
   //         <-- CustomPainter class
   final List modelData;
-  MyPainter({required this.modelData});
+  final String exerciseName;
+  MyPainter({required this.modelData, required this.exerciseName});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -291,9 +297,16 @@ class MyPainter extends CustomPainter {
       'left_ankle': listDataNum[15],
       'right_ankle': listDataNum[16],
     };
+    log(exerciseName + 'myname');
 
-    final isPostureCorrectbool = bicep(KEYPOINT_DICT_NUM);
-    log('posture asdf ${isPostureCorrectbool}');
+    var isPostureCorrectbool = false;
+    if (exerciseName == 'bicep curl') {
+      isPostureCorrectbool = bicep(KEYPOINT_DICT_NUM);
+    } else if (exerciseName == 'shoulder press - with bands') {
+      isPostureCorrectbool = shoulder_press(KEYPOINT_DICT_NUM);
+    } else if (exerciseName == 'plank') {
+      isPostureCorrectbool = plank(KEYPOINT_DICT_NUM);
+    }
 
     // 'left_lower_leg':(13,15),
     drawLine(

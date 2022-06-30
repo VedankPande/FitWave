@@ -75,7 +75,7 @@ class _BodyDetailsScreenState extends State<BodyDetailsScreen> {
                           controller: ageController,
                         ),
                         textField(
-                          title: 'Height (in cm)',
+                          title: 'Height (in m)',
                           controller: heightController,
                         ),
                         textField(
