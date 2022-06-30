@@ -4,7 +4,7 @@ import cv2
 import math
 
 #env variables and setup
-root = 'C:\\Users\\vedan\\Desktop\\code\\PoseTrainer\\data'
+root = 'C:\\Users\\vedan\\Desktop\\sample'
 video1 = 'C:\\Users\\vedan\\Desktop\\code\\PoseTrainer\\data\\pushups\\pushup1.mp4'
 
 
@@ -28,7 +28,7 @@ def get_frame(video_path,class_name,frames_per_second=1,directory=os.getcwd()):
         if not ret:
             break
         folder_path = os.path.join(directory,f'{class_name}_frames')
-        if frame_id%(math.floor(frame_rate)/frames_per_second)==0:
+        if frame_id%(48)==0:
             if not os.path.exists(folder_path):
                 os.mkdir(folder_path)
             file_path = os.path.join(folder_path,f'{video_name[:-4]}_frame{int(frame_id)}.jpg')
