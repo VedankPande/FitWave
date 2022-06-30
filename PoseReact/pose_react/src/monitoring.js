@@ -30,9 +30,7 @@ export function Monitor(exercise,pose){
         }
         return (temp*180)/Math.PI;
     }
-    const find_midpoint = (A,B) =>{
-        return [(A.x-B.x)/2,(A.y-B.y)/2]
-    }
+
   const check_bicep = () => {
     var hip ={"x":pose[KEYPOINT_DICT["left_hip"]].x,"y":pose[KEYPOINT_DICT["left_hip"]].y}
     var shoulder ={"x":pose[KEYPOINT_DICT["left_shoulder"]].x,"y":pose[KEYPOINT_DICT["left_shoulder"]].y}
@@ -50,24 +48,16 @@ export function Monitor(exercise,pose){
         }
   }
   const check_plank = () => {
-    var left_eye ={"x":pose[KEYPOINT_DICT["left_eye"]].x,"y":pose[KEYPOINT_DICT["left_eye"]].y}
-    var right_eye ={"x":pose[KEYPOINT_DICT["right_eye"]].x,"y":pose[KEYPOINT_DICT["right_eye"]].y}
     var left_shoulder ={"x":pose[KEYPOINT_DICT["left_shoulder"]].x,"y":pose[KEYPOINT_DICT["left_shoulder"]].y}
     var right_shoulder ={"x":pose[KEYPOINT_DICT["right_shoulder"]].x,"y":pose[KEYPOINT_DICT["right_shoulder"]].y}
     var left_hip ={"x":pose[KEYPOINT_DICT["left_hip"]].x,"y":pose[KEYPOINT_DICT["left_hip"]].y}
     var right_hip ={"x":pose[KEYPOINT_DICT["right_hip"]].x,"y":pose[KEYPOINT_DICT["right_hip"]].y}
-    var left_knee ={"x":pose[KEYPOINT_DICT["left_hip"]].x,"y":pose[KEYPOINT_DICT["left_hip"]].y}
+    var left_knee ={"x":pose[KEYPOINT_DICT["left_knee"]].x,"y":pose[KEYPOINT_DICT["left_knee"]].y}
     var right_knee ={"x":pose[KEYPOINT_DICT["right_knee"]].x,"y":pose[KEYPOINT_DICT["right_knee"]].y}
 
-    var forehead = find_midpoint(left_eye,right_eye)
-    var upper_back = find_midpoint(left_shoulder,right_shoulder)
-    var waist = find_midpoint(left_hip,right_hip)
-    var middle_knee = find_midpoint(left_knee,right_knee)
-
-    var upper_angle = find_angle(forehead,upper_back,waist)
-    var lower_angle = find_angle(upper_back,waist,middle_knee)
-
-    if (upper_angle<150 || lower_angle<150){
+    var lower_angle_right = find_angle(right_shoulder,right_hip,right_knee)
+    var lower_angle_left = find_angle(left_shoulder,left_hip,left_knee)
+    if (lower_angle_right<170 || lower_angle_left<170){
         return false
     }
     else{
@@ -99,7 +89,7 @@ export function Monitor(exercise,pose){
     switch(exercise){
         case "Biceps": return check_bicep();
         case "Plank": return check_plank();
-        case "Pushup": return check_shoulder_press();
+        case "Press": return check_shoulder_press();
         default: return false;
     }
 
