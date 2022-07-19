@@ -15,7 +15,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-<img src = "ui_screens.png" alt = "screens" width = 75%>
+<img src = "ui_screens.png" alt = "screens">
 
 Fitwave is a flutter mobile application that aims to serve as a complete fitness partner. We utilize Movenet, a pose estimation model developed by Tensorflow to extract poses from the video camera feed in real-time. Using these extracted keypoints, the app monitors the posture of the user and visually indicates incorrect form.
 
