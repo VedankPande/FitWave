@@ -3,7 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:workfit_app/widgets/postureWidget.dart';
 
 class WorkoutPostureScreen extends StatefulWidget {
-  const WorkoutPostureScreen({Key? key}) : super(key: key);
+  final title;
+  final exercises;
+  const WorkoutPostureScreen(this.title, this.exercises, {Key? key})
+      : super(key: key);
 
   @override
   State<WorkoutPostureScreen> createState() => _WorkoutPostureScreenState();
@@ -18,29 +21,71 @@ class _WorkoutPostureScreenState extends State<WorkoutPostureScreen> {
     });
   }
 
-  exercise() {
-    return Container(
-      width: 300,
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 8,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            "Push-ups",
-            style: TextStyle(
-              color: Color(0xff9a9a9a),
-              fontSize: 18,
+  Widget exerciseCard(title, {isActive = false}) {
+    return isActive
+        ? Container(
+            width: MediaQuery.of(context).size.width,
+            color: Color(0xfff8f8f8),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 15,
             ),
-          ),
-        ],
-      ),
-    );
+            margin: EdgeInsets.only(bottom: 10),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: Color(0xff232323),
+                    fontSize: 18,
+                    fontFamily: "Avenir",
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
+          )
+        : Container(
+            width: 300,
+            color: Colors.white,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8,
+            ),
+            margin: EdgeInsets.only(bottom: 10),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: Color(0xff9a9a9a),
+                    fontSize: 18,
+                  ),
+                ),
+              ],
+            ),
+          );
+  }
+
+  List<Widget> buildExercises() {
+    List<Widget> response = [];
+    if (widget.exercises.length > 0) {
+      response.add(exerciseCard(
+        widget.exercises[0]['exercise_data']['name'].toString(),
+        isActive: true,
+      ));
+    }
+    for (var i = 1; i < widget.exercises.length; i++) {
+      response.add(exerciseCard(
+          widget.exercises[i]['exercise_data']['name'].toString()));
+    }
+    return response;
   }
 
   @override
@@ -57,7 +102,9 @@ class _WorkoutPostureScreenState extends State<WorkoutPostureScreen> {
             //     width: MediaQuery.of(context).size.width,
             //   ),
             // ),
-            PostureWidget(),
+            PostureWidget(
+              widget.exercises[0]['exercise_data']['name'].toString(),
+            ),
             Positioned(
               top: 0,
               right: 0,
@@ -93,7 +140,7 @@ class _WorkoutPostureScreenState extends State<WorkoutPostureScreen> {
                         vertical: 15,
                       ),
                       child: Text(
-                        "SQUATS",
+                        widget.exercises[0]['exercise_data']['name'].toString(),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color(0xff232323),
@@ -140,7 +187,7 @@ class _WorkoutPostureScreenState extends State<WorkoutPostureScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Daily workout set-3",
+                                        widget.title,
                                         style: TextStyle(
                                           color: Color(0xff6c4cb0),
                                           fontSize: 20,
@@ -198,49 +245,25 @@ class _WorkoutPostureScreenState extends State<WorkoutPostureScreen> {
                                   ),
                                 ),
                                 SizedBox(height: 10),
-                                Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  color: Color(0xfff8f8f8),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 15,
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Squats",
-                                        style: TextStyle(
-                                          color: Color(0xff232323),
-                                          fontSize: 18,
-                                          fontFamily: "Avenir",
-                                          fontWeight: FontWeight.w800,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-                                exercise(),
-                                SizedBox(height: 10),
-                                exercise(),
-                                SizedBox(height: 10),
+                                Column(children: buildExercises()),
                               ],
                             ),
                             Container(
                               width: MediaQuery.of(context).size.width,
                               margin: EdgeInsets.only(bottom: 20),
-                              child: Text(
-                                "End Set",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Color(0xffe34c4c),
-                                  fontSize: 16,
-                                  fontFamily: "Avenir",
-                                  fontWeight: FontWeight.w800,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  "End Set",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Color(0xffe34c4c),
+                                    fontSize: 16,
+                                    fontFamily: "Avenir",
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                 ),
                               ),
                             ),

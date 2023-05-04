@@ -99,7 +99,17 @@ class _WorkoutSetsScreenState extends State<WorkoutSetsScreen> {
                 ],
               ),
             ),
-            buildCards(),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.797,
+              width: MediaQuery.of(context).size.width,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    buildCards(),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

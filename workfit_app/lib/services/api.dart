@@ -6,7 +6,7 @@ import 'package:workfit_app/services/userData.dart';
 
 class RestApi {
   final String uid = getUserData()['uid'];
-  final String domain = 'http://192.168.1.40:8000/';
+  final String domain = 'http://192.168.100.18:8000/';
 
   getRequest(uri) async {
     try {
@@ -91,6 +91,7 @@ class RestApi {
       'name': workoutName.toString(),
     });
     final data = await postRequest(uri, body);
+    await RestApi().fetchWorkout();
     return data ?? [];
   }
 
@@ -103,6 +104,7 @@ class RestApi {
       'exercise_id': exerciseId.toString(),
     });
     final data = await postRequest(uri, body);
+    await RestApi().fetchWorkout();
     return data ?? [];
   }
 

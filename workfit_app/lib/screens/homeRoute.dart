@@ -17,6 +17,7 @@ import 'package:workfit_app/widgets/workoutWidget.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 import 'dart:math';
+import 'package:quds_popup_menu/quds_popup_menu.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -107,6 +108,29 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(children: cards);
   }
 
+  List<QudsPopupMenuBase> getMenuItems() {
+    return [
+      // QudsPopupMenuDivider(),
+      QudsPopupMenuItem(
+        title: Text(
+          'Logout',
+        ),
+        onPressed: () {
+          AuthenticationHelper().signOut();
+          Navigator.pushAndRemoveUntil(
+            context,
+            PageTransition(
+              duration: const Duration(microseconds: 500),
+              type: PageTransitionType.fade,
+              child: OnBoarding(),
+            ),
+            (route) => false,
+          );
+        },
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,35 +155,40 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.w800,
                         ),
                       ),
-                      Container(
-                        width: 36,
-                        height: 36,
-                        child: Stack(
-                          children: [
-                            Container(
-                              width: 36,
-                              height: 36,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color(0xffe4d0ff),
+                      QudsPopupButton(
+                        // backgroundColor: Colors.red,
+                        tooltip: username,
+                        items: getMenuItems(),
+                        child: Container(
+                          width: 36,
+                          height: 36,
+                          child: Stack(
+                            children: [
+                              Container(
+                                width: 36,
+                                height: 36,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(0xffe4d0ff),
+                                ),
                               ),
-                            ),
-                            Positioned.fill(
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  userInitials,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Color(0xff232323),
-                                    fontSize: 15.56,
-                                    fontFamily: "Source Sans Pro",
-                                    fontWeight: FontWeight.w600,
+                              Positioned.fill(
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    userInitials,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Color(0xff232323),
+                                      fontSize: 15.56,
+                                      fontFamily: "Source Sans Pro",
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -255,54 +284,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ],
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          AuthenticationHelper().signOut();
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            PageTransition(
-                              duration: const Duration(microseconds: 500),
-                              type: PageTransitionType.fade,
-                              child: OnBoarding(),
-                            ),
-                            (route) => false,
-                          );
-                        },
-                        child: Text(
-                          'Logout',
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            PageTransition(
-                              duration: const Duration(microseconds: 500),
-                              type: PageTransitionType.fade,
-                              child: WorkoutPostureScreen(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          'posture detection',
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            PageTransition(
-                              duration: const Duration(microseconds: 500),
-                              type: PageTransitionType.fade,
-                              child: ImageSelector(),
-                            ),
-                            (route) => false,
-                          );
-                        },
-                        child: Text(
-                          'tflite',
                         ),
                       ),
                     ],

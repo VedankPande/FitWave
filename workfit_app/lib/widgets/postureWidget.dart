@@ -4,12 +4,14 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
+import 'package:workfit_app/services/postureChecker.dart';
 import 'package:workfit_app/tflite/movenet.dart';
 import 'package:workfit_app/utils/isolate_utils.dart';
 import 'dart:math' as math;
 
 class PostureWidget extends StatefulWidget {
-  const PostureWidget({Key? key}) : super(key: key);
+  final String exerciseName;
+  const PostureWidget(this.exerciseName, {Key? key}) : super(key: key);
 
   @override
   State<PostureWidget> createState() => _PostureWidgetState();
@@ -155,7 +157,7 @@ class _PostureWidgetState extends State<PostureWidget>
     super.dispose();
   }
 
-  Widget funcitonRebuilt(screenSize) {
+  Widget funcitonRebuilt(screenSize, exerciseName) {
     int newTime = ((new DateTime.now()).millisecondsSinceEpoch / 1000).round();
     if (currentTime != newTime) {
       fps = currentFrames;
@@ -169,6 +171,7 @@ class _PostureWidgetState extends State<PostureWidget>
       size: screenSize,
       painter: MyPainter(
         modelData: modelResponse,
+        exerciseName: exerciseName,
       ),
     );
   }
@@ -198,7 +201,10 @@ class _PostureWidgetState extends State<PostureWidget>
               : screenW,
           child: CameraPreview(controller!),
         ),
-        funcitonRebuilt(screenSize),
+        funcitonRebuilt(
+          screenSize,
+          widget.exerciseName,
+        ),
         Text(
           'Rendering FPS: ${fps}',
           style: TextStyle(
@@ -214,7 +220,8 @@ class _PostureWidgetState extends State<PostureWidget>
 class MyPainter extends CustomPainter {
   //         <-- CustomPainter class
   final List modelData;
-  MyPainter({required this.modelData});
+  final String exerciseName;
+  MyPainter({required this.modelData, required this.exerciseName});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -265,65 +272,113 @@ class MyPainter extends CustomPainter {
       'right_ankle': listData[16],
     };
 
+    List listDataNum = [];
+    for (final data in modelData) {
+      listDataNum.add([data[0], data[1]]);
+    }
+    // log(listDataNum.toString());
+
+    final KEYPOINT_DICT_NUM = {
+      'nose': listDataNum[0],
+      'left_eye': listDataNum[1],
+      'right_eye': listDataNum[2],
+      'left_ear': listDataNum[3],
+      'right_ear': listDataNum[4],
+      'left_shoulder': listDataNum[5],
+      'right_shoulder': listDataNum[6],
+      'left_elbow': listDataNum[7],
+      'right_elbow': listDataNum[8],
+      'left_wrist': listDataNum[9],
+      'right_wrist': listDataNum[10],
+      'left_hip': listDataNum[11],
+      'right_hip': listDataNum[12],
+      'left_knee': listDataNum[13],
+      'right_knee': listDataNum[14],
+      'left_ankle': listDataNum[15],
+      'right_ankle': listDataNum[16],
+    };
+    log(exerciseName + 'myname');
+
+    var isPostureCorrectbool = false;
+    if (exerciseName == 'bicep curl') {
+      isPostureCorrectbool = bicep(KEYPOINT_DICT_NUM);
+    } else if (exerciseName == 'shoulder press - with bands') {
+      isPostureCorrectbool = shoulder_press(KEYPOINT_DICT_NUM);
+    } else if (exerciseName == 'plank') {
+      isPostureCorrectbool = plank(KEYPOINT_DICT_NUM);
+    }
+
     // 'left_lower_leg':(13,15),
     drawLine(
       KEYPOINT_DICT['left_knee'],
       KEYPOINT_DICT['left_ankle'],
+      isPostureCorrect: isPostureCorrectbool,
     );
     // 'right_lower_leg':(14,16),
     drawLine(
       KEYPOINT_DICT['right_knee'],
       KEYPOINT_DICT['right_ankle'],
+      isPostureCorrect: isPostureCorrectbool,
     );
     // 'left_thigh':(11,13),
     drawLine(
       KEYPOINT_DICT['left_hip'],
       KEYPOINT_DICT['left_knee'],
+      isPostureCorrect: isPostureCorrectbool,
     );
     // 'right_thigh':(12,14),
     drawLine(
       KEYPOINT_DICT['right_hip'],
       KEYPOINT_DICT['right_knee'],
+      isPostureCorrect: isPostureCorrectbool,
     );
     // 'waist':(11,12),
     drawLine(
       KEYPOINT_DICT['right_hip'],
       KEYPOINT_DICT['right_knee'],
+      isPostureCorrect: isPostureCorrectbool,
     );
     // 'left_abdomen':(5,11),
     drawLine(
       KEYPOINT_DICT['left_shoulder'],
       KEYPOINT_DICT['left_hip'],
+      isPostureCorrect: isPostureCorrectbool,
     );
     // 'right abdomen':(6,12),
     drawLine(
       KEYPOINT_DICT['right_shoulder'],
       KEYPOINT_DICT['right_hip'],
+      isPostureCorrect: isPostureCorrectbool,
     );
     // 'upper_abdomen':(5,6),
     drawLine(
       KEYPOINT_DICT['left_shoulder'],
       KEYPOINT_DICT['right_shoulder'],
+      isPostureCorrect: isPostureCorrectbool,
     );
     // 'left_upper_arm':(5,7),
     drawLine(
       KEYPOINT_DICT['left_shoulder'],
       KEYPOINT_DICT['left_elbow'],
+      isPostureCorrect: isPostureCorrectbool,
     );
     // 'right_upper_arm':(6,8),
     drawLine(
       KEYPOINT_DICT['right_shoulder'],
       KEYPOINT_DICT['right_elbow'],
+      isPostureCorrect: isPostureCorrectbool,
     );
     // 'left_forearm':(7,9),
     drawLine(
       KEYPOINT_DICT['left_elbow'],
       KEYPOINT_DICT['left_wrist'],
+      isPostureCorrect: isPostureCorrectbool,
     );
     // 'right_forearm':(8,10),
     drawLine(
       KEYPOINT_DICT['right_elbow'],
       KEYPOINT_DICT['right_wrist'],
+      isPostureCorrect: isPostureCorrectbool,
     );
   }
 

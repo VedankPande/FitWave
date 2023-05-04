@@ -3,12 +3,15 @@ import 'dart:developer';
 import 'package:flutter/material.dart ';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:workfit_app/screens/home.dart';
 import 'package:workfit_app/screens/onBoarding/signup/bodyDetails.dart';
 import 'package:workfit_app/screens/workout/addNewSet/addNewSetCategory.dart';
+import 'package:workfit_app/screens/workout/workoutSetsRoute.dart';
 import 'package:workfit_app/widgets/coloredButton.dart';
 import 'package:workfit_app/widgets/loginWidget.dart';
 import 'package:workfit_app/widgets/textFieldWidget.dart';
 import 'package:workfit_app/services/api.dart';
+import 'package:workfit_app/widgets/workoutWidget.dart';
 
 class AddNewSetScreen extends StatefulWidget {
   const AddNewSetScreen({Key? key}) : super(key: key);
@@ -36,7 +39,17 @@ class _AddNewSetScreenState extends State<AddNewSetScreen> {
                     children: [
                       IconButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            PageTransition(
+                              duration: const Duration(microseconds: 500),
+                              type: PageTransitionType.fade,
+                              child: const Home(
+                                currentIndex: 3,
+                              ),
+                            ),
+                            (route) => false,
+                          );
                         },
                         icon: FaIcon(FontAwesomeIcons.arrowLeftLong),
                       ),
