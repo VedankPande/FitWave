@@ -31,6 +31,12 @@ Fitwave is a flutter mobile application that aims to serve as a complete fitness
 * [PostgreSQL](https://www.postgresql.org/)
 
 
+## Usage
+
+1. migrate
+2. Import assets/data_import/exercisedata.csv to table: workout_exercisedata
+2. Import assets/data_import/fooddata.csv to table: calorieTracker_fooddata
+
 <!-- CONTRIBUTING -->
 ## Contributing
 
