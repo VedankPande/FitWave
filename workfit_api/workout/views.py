@@ -1,14 +1,26 @@
+"""
+Views for the workout APIs.
+"""
 from json import loads,dumps
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from .models import ExerciseObject, Workout,ExerciseData
 from .serializers import ExerciseDataSerializer, WorkoutSerializer, ExerciseObjectSerializer
 
-#TODO:better filtering for owner and Error handling for get
-#workoutview returns a workout along with its exercise details
+
 class WorkoutView(APIView):
-    
-    def get(self,request,owner):
+    """ WorkoutView
+
+        get:
+        Return a list of all workouts for the user.
+        
+        post:
+        Create a new workout instance in the database
+
+        delete:
+        Delete a workout instance in the database.
+    """
+    def get(self,owner):
         try:
             query = Workout.objects.filter(owner = owner)
             data = WorkoutSerializer(instance=query,many=True).data
@@ -26,7 +38,6 @@ class WorkoutView(APIView):
         else:
             return JsonResponse({"status":500,"data":s_data.errors})
     
-    #requires workout_id
     def delete(self,request,id):
         try:
             Workout.objects.filter(id = id).delete()
@@ -36,6 +47,11 @@ class WorkoutView(APIView):
 
 
 class ExerciseDataView(APIView):
+    """ ExerciseDataView
+
+        get:
+        Return a list of all excercises.
+    """
 
     def get(self,request):
         try:
@@ -46,9 +62,15 @@ class ExerciseDataView(APIView):
         except Exception as e:
             return JsonResponse({'status':500,'data':repr(e)})
 
-#post implementation very messy: fix nested serializer issue with default validator
 class ExerciseObjectView(APIView):
+    """ ExerciseObjectView
+    
+    post:
+    Create a new workout set (with sets and reps) for the user.
 
+    delete:
+    Delete a workout set (with sets and reps) for the user.
+    """
     def post(self,request):
         data = request.data.copy() # required: sets,reps,workout_id,exercise_id
         try:

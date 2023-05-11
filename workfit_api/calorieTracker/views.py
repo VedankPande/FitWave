@@ -5,10 +5,14 @@ from .models import UserDailyIntake,FoodData
 from rest_framework.views import APIView
 from .serializers import DailyIntakeSerializer,FoodDataSerializer
 
-#TODO: search functionality
 class FoodView(APIView):
+    """ FoodView
 
-    #returns all food data
+        get:
+        Return a list of all food records in the database.
+
+    """
+    
     def get(self,request):
         query = FoodData.objects.all()
         data = FoodDataSerializer(instance=query,many=True).data
@@ -16,6 +20,19 @@ class FoodView(APIView):
         return JsonResponse({'status':200,'data':data})
 
 class FoodObjectView(APIView):
+
+    """ WorkoutView
+
+        get:
+        Return a list of all food instances logged by the user.
+        
+        post:
+        Create a new food logging instance for the user.
+
+        delete:
+        Delete a food logging instance for the user.
+
+    """
 
     def get(self,request,user):
         try:
@@ -26,7 +43,6 @@ class FoodObjectView(APIView):
         except Exception as e:
             return JsonResponse({'status':500,'data':repr(e)})
 
-    #requires food_data id,user,amount
     def post(self,request):
         data = request.data.copy()
         try:
@@ -40,24 +56,9 @@ class FoodObjectView(APIView):
         else:
             return JsonResponse({'status':500,'data':{}})
 
-    #requires id
     def delete(self,request,id):
         try:
             UserDailyIntake.objects.filter(id=id).delete()
             return JsonResponse({'status':200,'data':'deleted userintake object'})
         except Exception as e:
             return JsonResponse({'status':500,'data':e})
-
-##################################################################################################################################################################################
-
-#TODO: Complete this - experimental
-class FoodObjectQuery(ListAPIView):
-
-    model = UserDailyIntake
-    serializer = DailyIntakeSerializer
-
-    def get_queryset(self):
-        query_set = UserDailyIntake.objects.all()
-        user = self.request.query_params.get('user')
-        weekly = self.request.query_params.get('weekly') # boolean value? - check if weekly view is required - might be better ways to do this (send all data for user and filter in front end)
-        date = self.request.query_params.get('date')

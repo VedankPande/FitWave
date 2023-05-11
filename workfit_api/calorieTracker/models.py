@@ -1,3 +1,6 @@
+"""
+Database models for Calorie Tracker API.
+"""
 from random import choices
 from secrets import choice
 from django.utils.timezone import now
@@ -6,11 +9,10 @@ from time import process_time_ns
 import django
 from django.db import models
 
-#TODO: Decide fields to use and finish the model
-#TODO: Test model inheritance on fooddata and foodobject
-
 
 class FoodData(models.Model):
+   """ FoodData Model """
+   
    name = models.CharField(max_length=255)
    protein = models.DecimalField(max_digits=7,decimal_places=2)  
    fat = models.DecimalField(max_digits=7,decimal_places=2)
@@ -19,6 +21,8 @@ class FoodData(models.Model):
 
 
 class UserDailyIntake(models.Model):
+   """ UserDailyIntake Model """
+
    BREAKFAST = 'BR'
    LUNCH = 'LU'
    DINNER = 'DI'
