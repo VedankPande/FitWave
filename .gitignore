@@ -6,3 +6,4 @@ landmark_visualizations/
 __pycache__/
 *.pyc
 PoseReact/pose_react/node_modules/
+.env
